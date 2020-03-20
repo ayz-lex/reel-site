@@ -1,13 +1,30 @@
 <html>
     <head>
         <title>Register</title>
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous">
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous">
+        </script>
+        <script type = "text/javascript">
+            $(document).ready(() => {
+                $("#form").submit(() => {
+                    $.ajax({
+                        url: "/",
+                        type: "POST",
+                        data: $("#form").serialize(),
+                        dataType: JSON,
+                        success: function(data) {
+                            alert("Registration Complete")
+                        }
+                    })
+                    return false
+                })
+            })
         </script>
     </head>
     <body>
-        <form id = 'registration-form' action='/' method = 'post'>
+        <form id = 'form' action='/' method = 'POST'>
             <label>Username</label>
             <input type = 'text' name = 'username' required>
             <label>Password</label>
@@ -16,10 +33,10 @@
             <input type = 'text' name = 'occupation' required>
             <label>Age</label>
             <input type = 'number' name = 'age' required>
-            <label>Enter your 3 favorite movies, and rate them out of 10</label>
+            <label>Enter your 3 favorite movies</label>
             <input type = 'text' name = 'movie1' required>
             <input type = 'text' name = 'movie2' required>
-            <input type = 'text' name = 'movie2' required>
+            <input type = 'text' name = 'movie3' required>
             <button type = 'submit'>Register</button>
         </form>
     </body>
