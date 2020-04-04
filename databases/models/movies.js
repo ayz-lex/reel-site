@@ -6,8 +6,7 @@ module.exports = sequelize.define('movies', {
         type: DataTypes.STRING
     },
     popularity: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0
+        type: DataTypes.INTEGER
     }
 }, {
     timestamps: false
