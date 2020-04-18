@@ -1,35 +1,37 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Login</title>
-        <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous">
-        </script>
-        <script type = "text/javascript">
-            $(document).ready(() => {
-                $("#form").submit(() => {
-                    $.ajax({
-                        url: "/login",
-                        type: "POST",
-                        data: $("#form").serialize(),
-                        dataType: JSON,
-                        success: function(data) {
-                            alert("Login Complete")
-                        }
-                    })
-                    return false
-                })
-            })
-        </script>
-    </head>
-    <body>
-        <form id = 'form' action='/login' method = 'POST'>
-            <label>Username</label>
-            <input type = 'text' name = 'username' required>
-            <label>Password</label>
-            <input type = 'text' name = 'password' required>
-            <button type = 'submit'>Login</button>
-        </form>
-    </body>
+
+<head>
+  <title>Login</title>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+    </script>
+  <script type="text/javascript">
+    $(document).ready(() => {
+      $("#form").submit(() => {
+        $.ajax({
+          url: "/login",
+          type: "POST",
+          data: $("#form").serialize(),
+          dataType: JSON,
+          success: function (data) {
+            alert("Login Complete")
+          }
+        })
+        return false
+      })
+    })
+  </script>
+</head>
+
+<body>
+  <form id='form' action='/login' method='POST'>
+    <label>Username</label>
+    <input type='text' name='username' required>
+    <label>Password</label>
+    <input type='text' name='password' required>
+    <button type='submit'>Login</button>
+  </form>
+</body>
+
 </html>
