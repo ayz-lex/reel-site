@@ -1,10 +1,30 @@
 const express = require('express')
 const app = express()
-const db = require('./databases/database')
+const session = require('express-session')
 
-app.use('/', require('./routes/register'))
+const MAXAGE = 3600000
+const PORT = 3000
+
+app.use('/register', require('./routes/auth/register'))
+app.use('/login', require('./routes/auth/login'))
+app.use('/logout', require('./routes/auth/logout'))
+app.use('/home', require('./routes/homepage'))
+app.use('/movie', require('./routes/movie'))
+
+app.use(session({
+  cookie: {
+    maxAge: MAXAGE,
+    sameSite: true,
+    secure: false, //change when production
+  },
+  name: 'name',
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: false,
+  //add store later
+}));
 
 app.set('view engine', 'ejs')
 
-app.listen(3000, () => {console.log('currently listening to port 3000')})
+app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})
 
