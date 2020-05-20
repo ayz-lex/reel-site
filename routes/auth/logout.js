@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-router.get('/logout', async(req, res) => {
+router.get('/', async(req, res) => {
   req.session.destroy((err) => {
     if (err) throw err
   })

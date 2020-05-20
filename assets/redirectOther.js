@@ -1,5 +1,5 @@
 const redirectOther = (req, res, next) => {
-  if (req.session.userID) {
+  if (req.session) {
     res.redirect('/home')
   } else {
     next()
