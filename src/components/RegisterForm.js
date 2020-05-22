@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 
-class PostForm extends React.Component {
+class RegisterForm extends React.Component {
   constructor(props) {
     super(props)
 
@@ -24,11 +24,11 @@ class PostForm extends React.Component {
     e.preventDefault()
     console.log(this.state)
     axios.post('http://localhost:8080/api/register', this.state)
-      .then(res => {
+      .then(res => {  
         console.log(res)
       })
       .catch(err => {
-        console.log(err)
+        console.error(err)
       })
   }
 
@@ -101,4 +101,4 @@ class PostForm extends React.Component {
   }
 }
 
-export default PostForm
+export default RegisterForm
