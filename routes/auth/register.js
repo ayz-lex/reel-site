@@ -10,7 +10,7 @@ const upsertMovie = async (value) => {
       await Movie.create({movie: value, popularity: 1})
     } else {
       element.popularity++
-      await element.save()
+      element.save()
     }
   })
 }
@@ -31,11 +31,7 @@ const createUser = async (req) => {
   })
 }
 
-router.get('/', (req, res) => {
-  res.send('hello')
-})
-
-router.post('/', express.urlencoded({extended: true}), async (req, res) => {
+router.post('/', express.json(), async (req, res) => {
   await createUser(req).then(async(bool) => {
     if (!bool) {
       await upsertMovie(req.body.movie1)

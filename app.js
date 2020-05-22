@@ -20,9 +20,12 @@ app.use(session({
   //add store later
 }));
 
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
+
 app.use('/api/movie', require('./routes/movie'))
 app.use('/api/register', require('./routes/auth/register'))
-
-app.use(cors())
 
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})

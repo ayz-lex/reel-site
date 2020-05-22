@@ -2,9 +2,8 @@ const express = require('express')
 const router = express.Router()
 const User = require('../../databases/models/users')
 const bcrypt = require('bcrypt')
-const redirect = require('../../assets/redirectOther')
 
-router.post('/api/authentication', async (req, res) => {
+router.post('/api/login', async (req, res) => {
   await User.findOne({where: {username: req.body.username}}).then((user) => {
     if (user !== null) {
       //username does exist
@@ -13,15 +12,15 @@ router.post('/api/authentication', async (req, res) => {
           //right password
           req.session.username = user.username
           req.session.data = {occupation: user.occupation, age: user.age, watched: user.watched}
-          res.redirect('/home')
+          res.send('success')
         } else {
           //wrong password
-          res.redirect('/login')
+          res.send('wrong password')
         }
       })
     } else {
       //username doesn't exist
-      res.redirect('/login')
+      res.send('wrong username')
     }
   })
 })
