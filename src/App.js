@@ -1,8 +1,7 @@
 import React from 'react';
 import './App.css';
 import Movie from './components/Movie.js'
-import RegisterForm from './components/RegisterForm.js'
-import LoginForm from './components/LoginForm.js'
+import AuthenticationForm from './components/AuthenticationForm.js'
 
 class App extends React.Component{
   constructor(props) {
@@ -18,8 +17,7 @@ class App extends React.Component{
             {this.checkAuthentication()}
           </ul>
         </nav>
-        <RegisterForm />
-        <LoginForm />
+        <AuthenticationForm />
         <h1> hello, it is {new Date().toLocaleDateString()} </h1>
         <p></p>
         <Movie />
