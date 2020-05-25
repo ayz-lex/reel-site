@@ -3,7 +3,7 @@ const router = express.Router()
 const User = require('../../databases/models/users')
 const bcrypt = require('bcrypt')
 
-router.post('/api/login', async (req, res) => {
+router.post('/api/login', express.json(), async (req, res) => {
   await User.findOne({where: {username: req.body.username}}).then((user) => {
     if (user !== null) {
       //username does exist

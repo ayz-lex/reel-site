@@ -18,12 +18,13 @@ const upsertMovie = async (value) => {
 const createUser = async (req) => {
   return await User.findOne({where: {username: req.body.username}}).then((element) => {
     if (element === null) {
-      bcrypt.hash(req.body.password, 12, async (err, hash) => {
+      const {username, password, occupation, age, movie1, movie2, movie3} = req.body
+      bcrypt.hash(password, 12, async (err, hash) => {
         if (err) throw err
-        await User.create({username: req.body.username, password: hash, occupation: req.body.occupation, age: req.body.age, watched: [req.body.movie1, req.body.movie2, req.body.movie3]})
+        await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]})
       })
-      req.session.username = req.body.username
-      req.session.data = {occupation: req.body.occupation, age: req.body.age, watched: [req.body.movie1, req.body.movie2, req.body.movie3]}
+      req.session.username = username
+      req.session.data = {occupation: occupation, age: age, watched: [movie1, movie2, movie3]}
       return false
     } else {
       return true
@@ -32,13 +33,19 @@ const createUser = async (req) => {
 }
 
 router.post('/', express.json(), async (req, res) => {
-  await createUser(req).then(async(bool) => {
-    if (!bool) {
-      await upsertMovie(req.body.movie1)
-      await upsertMovie(req.body.movie2)
-      await upsertMovie(req.body.movie3)
-    }
-  })
+  await createUser(req)
+    .then((bool) => {
+      if (!bool) {
+        upsertMovie(req.body.movie1)
+        upsertMovie(req.body.movie2)
+        upsertMovie(req.body.movie3)
+      }
+      res.send('OK')
+    })
+    .catch(err => {
+      console.error(err)
+      res.send('Failed')
+    })
 })
 
 module.exports = router
