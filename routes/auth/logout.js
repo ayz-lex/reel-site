@@ -3,7 +3,9 @@ const router = express.Router()
 
 router.get('/', async(req, res) => {
   req.session.destroy((err) => {
-    if (err) throw err
+    if (err) {
+      res.sendStatus(500)
+    }
   })
 })
 

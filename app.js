@@ -27,5 +27,7 @@ app.use(cors({
 
 app.use('/api/movie', require('./routes/movie'))
 app.use('/api/register', require('./routes/auth/register'))
+app.use('/api/login', require('./routes/auth/login'))
+app.use('/api/logout', require('./routes/auth/logout'))
 
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})

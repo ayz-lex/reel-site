@@ -34,17 +34,19 @@ const createUser = async (req) => {
 
 router.post('/', express.json(), async (req, res) => {
   await createUser(req)
-    .then((bool) => {
+    .then(async (bool) => {
       if (!bool) {
-        upsertMovie(req.body.movie1)
-        upsertMovie(req.body.movie2)
-        upsertMovie(req.body.movie3)
+        await upsertMovie(req.body.movie1)
+        await upsertMovie(req.body.movie2)
+        await upsertMovie(req.body.movie3)
+        res.send('OK')
+      } else {
+        res.send('User Taken')
       }
-      res.send('OK')
     })
     .catch(err => {
       console.error(err)
-      res.send('Failed')
+      res.sendStatus(500)
     })
 })
 
