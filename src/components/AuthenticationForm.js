@@ -19,17 +19,16 @@ class AuthenticationForm extends React.Component {
   }
 
   loginSubmitHandler = async e => {
-    await this.submitHandler(e, 'http://localhost:8080/api/login', {username: this.state.username, password: this.state.password}, 'login failed')
+    await this.submitHandler(e, 'http://localhost:8080/api/login', {username: 'a', password: 'z'}, 'login failed')
   }
 
   submitHandler = async (e, route, data, errorMessage) => {
     e.preventDefault()
     await axios.post(route, data)
-      .then(res => {  
-        this.setState({loggedIn: res === 'OK'})
-        if (res !== 'OK') {
-          alert(errorMessage)
-        }
+      .then(res => { 
+        console.log(res.data) 
+        this.setState({loggedIn: res.data === 'OK'})
+        alert(res.data === 'OK' ? 'success' : errorMessage)
       })
       .catch(err => {
         console.error(err)
