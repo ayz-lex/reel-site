@@ -20,10 +20,8 @@ const createUser = async (req) => {
     const {username, password, occupation, age, movie1, movie2, movie3} = req.body
     bcrypt.hash(password, 12, async (err, hash) => {
       if (err) throw err
-      await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]})
+      req.session = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]})
     })
-    req.session.username = username
-    req.session.data = {occupation: occupation, age: age, watched: [movie1, movie2, movie3]}
     return false
   } else {
     return true

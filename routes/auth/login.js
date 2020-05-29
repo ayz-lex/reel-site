@@ -8,8 +8,8 @@ router.post('/', express.json(), async (req, res) => {
   if (user !== null) {
     let result = await bcrypt.compare(req.body.password, user.password)
     if (result) {
-      req.session.username = user.username
-      req.session.data = {occupation: user.occupation, age: user.age, watched: user.watched}
+      //create session
+      req.session.data = user
       res.send('OK')
     } else {
       res.send('No Password')
