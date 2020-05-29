@@ -2,12 +2,15 @@ import React from 'react'
 import axios from 'axios'
 
 class AuthenticationForm extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
+    this.state = {}
+    this.checkSession()
+  }
 
-    this.state = {
-      loggedIn: false,
-    }
+  checkSession = async () => {
+    let response = await axios.get('http://localhost:8080/api/checkLogin')
+    this.setState({loggedIn: response.data === 'OK'})
   }
 
   changeHandler = e => {
@@ -15,11 +18,22 @@ class AuthenticationForm extends React.Component {
   }
 
   registerSubmitHandler = async e => {
-    await this.submitHandler(e, 'http://localhost:8080/api/register', this.state, 'register failed')
+    await this.submitHandler(e, 'http://localhost:8080/api/register', {
+      username: this.state.username,
+      password: this.state.password,
+      age: this.state.age,
+      occupation: this.state.occupation,
+      movie1: this.state.movie1,
+      movie2: this.state.movie2,
+      movie3: this.state.movie3
+    }, 'register failed')
   }
 
   loginSubmitHandler = async e => {
-    await this.submitHandler(e, 'http://localhost:8080/api/login', {username: 'a', password: 'z'}, 'login failed')
+    await this.submitHandler(e, 'http://localhost:8080/api/login', {
+      username: this.state.username, 
+      password: this.state.password
+    }, 'login failed')
   }
 
   submitHandler = async (e, route, data, errorMessage) => {
@@ -29,6 +43,11 @@ class AuthenticationForm extends React.Component {
     console.log(response.data)
     this.setState({loggedIn: response.data === 'OK'})
     alert(response.data === 'OK' ? 'success' : errorMessage)
+  }
+
+  logoutHandler = async e => {
+    this.setState({loggedIn: false})
+    await axios.get('http://localhost:8080/api/logout')
   }
 
   login = () => {
@@ -58,7 +77,7 @@ class AuthenticationForm extends React.Component {
   logout = () => {
     return (
       <div>
-        <button>Logout</button>
+        <button onClick = {this.logoutHandler}>Logout</button>
       </div>
     )
   }
