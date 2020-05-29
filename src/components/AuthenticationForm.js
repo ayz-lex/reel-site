@@ -24,15 +24,11 @@ class AuthenticationForm extends React.Component {
 
   submitHandler = async (e, route, data, errorMessage) => {
     e.preventDefault()
-    await axios.post(route, data)
-      .then(res => { 
-        console.log(res.data) 
-        this.setState({loggedIn: res.data === 'OK'})
-        alert(res.data === 'OK' ? 'success' : errorMessage)
-      })
-      .catch(err => {
-        console.error(err)
-      })
+    console.log(this.state)
+    let response = await axios.post(route, data)
+    console.log(response.data)
+    this.setState({loggedIn: response.data === 'OK'})
+    alert(response.data === 'OK' ? 'success' : errorMessage)
   }
 
   login = () => {
