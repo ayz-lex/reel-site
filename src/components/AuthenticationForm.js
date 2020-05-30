@@ -40,7 +40,6 @@ class AuthenticationForm extends React.Component {
     e.preventDefault()
     console.log(this.state)
     let response = await axios.post(route, data)
-    console.log(response.data)
     this.setState({loggedIn: response.data === 'OK'})
     alert(response.data === 'OK' ? 'success' : errorMessage)
   }
@@ -149,20 +148,18 @@ class AuthenticationForm extends React.Component {
   }
 
   render() {
-    if (this.state.loggedIn) {
-      return (
-        <div>
-          {this.logout()}
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          {this.login()}
-          {this.register()}
-        </div>
-      )
-    }
+    let loggedIn = () => this.logout()
+    let loggedOut = () => (
+      <div>
+        {this.login()}
+        {this.register()}
+      </div>
+    )
+    return (
+      <nav>
+        {this.state.loggedIn ? loggedIn() : loggedOut()}
+      </nav>
+    )
   }
 }
 
