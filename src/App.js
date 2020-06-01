@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Movie from './components/Movie.js'
-import AuthenticationForm from './components/AuthenticationForm.js'
+import NavigationBar from './components/NavigationBar.js'
 
 class App extends React.Component{
   constructor(props) {
@@ -34,7 +34,7 @@ class App extends React.Component{
   render() {
     return (
       <div>
-        <NavBar />
+        <NavigationBar />
         <MovieSection movies={this.state.movies}/>
       </div>
     )
@@ -49,17 +49,10 @@ class App extends React.Component{
   */
 }
 
-function NavBar() {
-  return (
-    <div>
-      <AuthenticationForm />
-    </div>
-  )
-}
-
 function MovieSection(props) {
   return (
-    <div>
+    <div id="movieSection">
+      <h1>Movies</h1>
       {props.movies.map(movie => (
         <React.Fragment>
           <Movie {...movie} />
