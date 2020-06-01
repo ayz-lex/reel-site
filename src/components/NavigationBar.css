@@ -10,7 +10,7 @@ li {
   float: left;
 }
 
-li a, .dropbtn{
+li a, .dropbtn, #logout_button{
   display: block;
   color: white;
   text-align: center;

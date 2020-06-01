@@ -74,14 +74,6 @@ class NavigationBar extends React.Component {
     )
   }
 
-  logout = () => {
-    return (
-      <div>
-        <button onClick = {this.logoutHandler}>Logout</button>
-      </div>
-    )
-  }
-
   register = () => {
     return (
       <div>
@@ -154,7 +146,7 @@ class NavigationBar extends React.Component {
       tabs = (
         <div>
           <li><a href="#home">Home</a></li>
-          <li><a href="#logout">Logout</a></li>
+          <li><button id="logout_button" onClick={this.logoutHandler}>Logout</button></li>
         </div>
       )
     } else {
