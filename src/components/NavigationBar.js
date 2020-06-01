@@ -20,8 +20,8 @@ class NavigationBar extends React.Component {
 
   registerSubmitHandler = async e => {
     await this.submitHandler(e, 'http://localhost:8080/api/register', {
-      username: this.state.username,
-      password: this.state.password,
+      username: this.state.username_register,
+      password: this.state.password_register,
       age: this.state.age,
       occupation: this.state.occupation,
       movie1: this.state.movie1,
@@ -43,11 +43,18 @@ class NavigationBar extends React.Component {
     let response = await axios.post(route, data)
     this.setState({loggedIn: response.data === 'OK'})
     alert(response.data === 'OK' ? 'success' : errorMessage)
+
   }
 
   logoutHandler = async e => {
     this.setState({loggedIn: false})
     await axios.get('http://localhost:8080/api/logout')
+  }
+
+  searchHandler = async e => {
+    let url = `http://localhost:8080/api/movie/${this.state.searched_movie}`
+    let response = await axios.get(url)
+    alert(response.data === 'Not Found' ? 'movie not found' : 'movie found')
   }
 
   login = () => {
@@ -81,7 +88,7 @@ class NavigationBar extends React.Component {
           <div>
             <input
               type = 'text' 
-              name = 'username' 
+              name = 'username_register' 
               onChange = {this.changeHandler}
               required
             />
@@ -89,7 +96,7 @@ class NavigationBar extends React.Component {
           <div>
             <input 
               type = 'text' 
-              name = 'password'
+              name = 'password_password'
               onChange = {this.changeHandler}
               required
             />
@@ -174,9 +181,14 @@ class NavigationBar extends React.Component {
         <ul>
           {tabs}
           <li>
-            <form>
-              <input type="text" id="input" name="input"/>
-              <input type="submit"/>
+            <form onSubmit={this.searchHandler}>
+              <input 
+                type="text" 
+                onChange={this.changeHandler} 
+                name="searched_movie"
+                required
+              />
+              <button>Search</button>
             </form>
           </li>
         </ul>
