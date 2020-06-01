@@ -24,10 +24,10 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-app.use('/api/movie', require('./routes/movie'))
-app.use('/api/register', require('./routes/auth/register'))
-app.use('/api/login', require('./routes/auth/login'))
-app.use('/api/logout', require('./routes/auth/logout'))
-app.use('/api/checkLogin', require('./routes/auth/checkLogin'))
+app.use('/api/movie', require('./api/movie'))
+app.use('/api/register', require('./api/auth/register'))
+app.use('/api/login', require('./api/auth/login'))
+app.use('/api/logout', require('./api/auth/logout'))
+app.use('/api/checkLogin', require('./api/auth/checkLogin'))
 
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})
