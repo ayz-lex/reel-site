@@ -10,12 +10,12 @@ router.post('/', express.json(), async (req, res) => {
     if (result) {
       //create session
       req.session.data = user
-      res.send('OK')
+      res.send(req.sessionID)
     } else {
-      res.send('No Password')
+      res.send('NO')
     }
   } else {
-    res.send('No Username')
+    res.send('NO')
   }
 })
 

@@ -20,7 +20,7 @@ const createUser = async (req) => {
     const {username, password, occupation, age, movie1, movie2, movie3} = req.body
     bcrypt.hash(password, 12, async (err, hash) => {
       if (err) throw err
-      req.session = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]})
+      req.session.data = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]})
     })
     return false
   } else {
@@ -34,9 +34,9 @@ router.post('/', express.json(), async (req, res) => {
     await upsertMovie(req.body.movie1)
     await upsertMovie(req.body.movie2)
     await upsertMovie(req.body.movie3)
-    res.send('OK')
+    res.send(res.sessionID)
   } else {
-    res.send('User Taken')
+    res.send('NO')
   }
 })
 
