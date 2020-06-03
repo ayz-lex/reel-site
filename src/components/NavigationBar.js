@@ -11,7 +11,7 @@ class NavigationBar extends React.Component {
 
   checkSession = async () => {
     let response = await axios.get('http://localhost:8080/api/checkLogin')
-    this.setState({loggedIn: response.data === 'OK'})
+    this.setState(response.data !== 'NO' ? {loggedIn: true, sessionID: response.data} : {loggedIn: false})
   }
 
   changeHandler = e => {
@@ -19,7 +19,7 @@ class NavigationBar extends React.Component {
   }
 
   registerSubmitHandler = async e => {
-    await this.submitHandler(e, 'http://localhost:8080/api/register', {
+    let response = await this.submitHandler(e, 'http://localhost:8080/api/register', {
       username: this.state.username_register,
       password: this.state.password_register,
       age: this.state.age,
@@ -28,27 +28,29 @@ class NavigationBar extends React.Component {
       movie2: this.state.movie2,
       movie3: this.state.movie3
     }, 'register failed')
+    this.state = {}
+    this.setState({loggedIn: response.data !== 'NO', sessionID: response.data})
   }
 
   loginSubmitHandler = async e => {
-    await this.submitHandler(e, 'http://localhost:8080/api/login', {
+    let response = await this.submitHandler(e, 'http://localhost:8080/api/login', {
       username: this.state.username, 
       password: this.state.password
     }, 'login failed')
+    this.state = {}
+    this.setState({loggedIn: response.data !== 'NO', sessionID: response.data})
   }
 
   submitHandler = async (e, route, data, errorMessage) => {
     e.preventDefault()
-    console.log(this.state)
     let response = await axios.post(route, data)
-    this.setState({loggedIn: response.data === 'OK'})
-    alert(response.data === 'OK' ? 'success' : errorMessage)
-
+    alert(response.data !== 'NO' ? 'Success' : errorMessage)
+    return response
   }
 
   logoutHandler = async e => {
-    this.setState({loggedIn: false})
     await axios.get('http://localhost:8080/api/logout')
+    this.setState({loggedin: false, sessionID: undefined})
   }
 
   searchHandler = async e => {
