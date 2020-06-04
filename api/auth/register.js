@@ -55,12 +55,12 @@ const createUser = async (req) => {
 }
 
 router.post('/', express.json(), async (req, res) => {
-  let data = await createUser(req)
-  if (data) {
+  let user = await createUser(req)
+  if (user) {
     await upsertMovie(req.body.movie1)
     await upsertMovie(req.body.movie2)
     await upsertMovie(req.body.movie3) 
-    const payload = { data }
+    const payload = {username: user.username}
     const token = jwt.sign(payload, 'secret', {
       expiresIn: '1h'
     })

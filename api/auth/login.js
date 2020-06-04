@@ -17,7 +17,7 @@ router.post('/', express.json(), async (req, res) => {
       })
     })
     if (result) {
-      const payload = user
+      const payload = {username: user.username}
       const token = jwt.sign(payload, 'secret', {
         expiresIn: '1h'
       })

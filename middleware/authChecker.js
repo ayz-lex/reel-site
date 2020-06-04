@@ -14,7 +14,7 @@ const checkAuth = (req, res, next) => {
           error: 'Unauthorized: token invalid'
         }) 
       } else {
-        req.data = decoded.data
+        req.username = decoded.username
         next()
       }
     })
