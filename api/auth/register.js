@@ -7,20 +7,20 @@ const jwt = require('jsonwebtoken')
 
 const upsertMovie = async (value) => {
   let movie = await Movie.findOne({where: {movie: value}}).catch(err => {
-    res.sendStatus(500).json({
+    res.status(500).json({
       error: 'Internal Error'
     })
   })
   if (movie === null) {
     await Movie.create({movie: value, popularity: 1}).catch(err => {
-      res.sendStatus(500).json({
+      res.status(500).json({
         error: 'Internal Error'
       })
     })
   } else {
     ++movie.popularity
     await movie.save().catch(err => {
-      res.sendStatus(500).json({
+      res.status(500).json({
         error: 'Internal Error'
       })
     })
@@ -29,7 +29,7 @@ const upsertMovie = async (value) => {
 
 const createUser = async (req) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
-    res.sendStatus(500).json({
+    res.status(500).json({
       error: 'Internal Error'
     })
   })
@@ -38,12 +38,12 @@ const createUser = async (req) => {
     new_user
     bcrypt.hash(password, 12, async (err, hash) => {
       if (err) {
-        res.sendStatus(500).json({
+        res.status(500).json({
           error: 'Internal Error'
         })
       }  
       new_user = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]}).catch(err => {
-        res.sendStatus(500).json({
+        res.status(500).json({
           error: 'Internal Error'
         })
       })
@@ -65,10 +65,11 @@ router.post('/', express.json(), async (req, res) => {
       expiresIn: '1h'
     })
     res.cookie('token', token, {
-      httpOnly: true, secure: true
+      httpOnly: true,
+      secure: false
     }).sendStatus(200)
   } else {
-    res.sendStatus(401).json({
+    res.status(401).json({
       error: 'Username Taken'
     })
   }

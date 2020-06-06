@@ -6,13 +6,13 @@ const jwt = require('jsonwebtoken')
 
 router.post('/', express.json(), async (req, res) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
-    res.sendStatus(500).json({
+    res.status(500).json({
       error: 'Internal Error'
     })
   })
   if (user !== null) {
     let result = await bcrypt.compare(req.body.password, user.password).catch(err => {
-      res.sendStatus(500).json({
+      res.status(500).json({
         error: 'Internal Error'
       })
     })
@@ -23,15 +23,15 @@ router.post('/', express.json(), async (req, res) => {
       })
       res.cookie('token', token, {
         httpOnly: true,
-        secure: true
+        secure: false
       }).sendStatus(200)
     } else {
-      res.sendStatus(401).json({
+      res.status(401).json({
         error: 'Incorrect Password'
       })
     }
   } else {
-    res.sendStatus(401).json({
+    res.status(401).json({
       error: 'Incorrect Username'
     })
   }
