@@ -10,8 +10,26 @@ class NavigationBar extends React.Component {
   }
 
   checkSession = async () => {
-    let response = await axios.get('http://localhost:8080/api/checkLogin')
-    this.setState(response.data !== 'NO' ? {loggedIn: true} : {loggedIn: false})
+    await fetch('http://localhost:8080/api/checkLogin', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    }).then(res => {
+      console.log(res)
+      if (res.status === 200) {
+        this.setState({loggedIn: true})
+      } else {
+        const error = new Error(res.error)
+        throw error
+      }
+    }).catch(err => {
+      console.error(err)
+      this.setState({loggedIn: false})
+    })
   }
 
   changeHandler = e => {
@@ -19,7 +37,7 @@ class NavigationBar extends React.Component {
   }
 
   registerSubmitHandler = async e => {
-    let response = await this.submitHandler(e, 'http://localhost:8080/api/register', {
+    await this.submitHandler(e, 'http://localhost:8080/api/register', {
       username: this.state.username_register,
       password: this.state.password_register,
       age: this.state.age,
@@ -27,45 +45,72 @@ class NavigationBar extends React.Component {
       movie1: this.state.movie1,
       movie2: this.state.movie2,
       movie3: this.state.movie3
-    })
-    if (response.status === 200) {
-      alert('Register Succeeded')
-    } else {
+    }).then(res => {
+      if (res.status === 200) {
+        alert('Register Succeeded')
+        this.state = {}
+        this.setState({loggedIn: true})
+      } else {
+        const error = new Error(res.error)
+        throw error
+      }
+    }).catch(err => {
       alert('Register Failed')
-    }
-    this.state = {}
-    this.setState({loggedIn: response.data !== 'NO'})
+      this.state = {}
+      this.setState({loggedIn: false})
+    })
   }
 
   loginSubmitHandler = async e => {
-    let response = await this.submitHandler(e, 'http://localhost:8080/api/login', {
+    await this.submitHandler(e, 'http://localhost:8080/api/login', {
       username: this.state.username, 
       password: this.state.password
+    }).then(res => {
+      if (res.status === 200) {
+        alert('Login Succeeded')
+        this.state = {}
+        this.setState({loggedIn: true})
+      } else {
+        const error = new Error(res.error)
+        throw error
+      }
+    }).catch(err => {
+      console.error(err)
+      alert('Error logging in')
     })
-    if (response.status === 200) {
-      alert('Login Succeeded')
-    } else {
-      alert('Login Failed')
-    }
-    this.state = {}
-    this.setState({loggedIn: response.data !== 'NO'})
   }
 
   submitHandler = async (e, route, data) => {
     e.preventDefault()
-    let response = await axios.post(route, data)
+    let response = await fetch(route, {
+      method: 'POST',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
     return response
   }
 
   logoutHandler = async e => {
-    let response = await axios.get('http://localhost:8080/api/logout')
-    console.log(response.data)
+    let response = await fetch('http://localhost:8080/api/logout', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    })
     this.setState({loggedIn: false})
   }
 
   searchHandler = async e => {
     let url = `http://localhost:8080/api/movie/${this.state.searched_movie}`
-    let response = await axios.get(url)
+    let response = await fetch(url)
     alert(response.data === 'Not Found' ? 'movie not found' : 'movie found')
   }
 
