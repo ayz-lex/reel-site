@@ -1,54 +1,36 @@
 import React from 'react'
 import './Movie.css'
-import {Dropdown, DropdownButton} from 'react-bootstrap'
 
 class Movie extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = {movies: [
-      {
-        name: 'name',
-        popularity: 'popularity',
-        genre: 'genre',
-        year: 'year',
-        description: 'description'
-      }, 
-      {
-        name: 'name2',
-        popularity: 'popularity2',
-        genre: 'genre2',
-        year: 'year2',
-        description: 'description2'
-      },
-      {
-        name: 'name3',
-        popularity: 'popularity3',
-        genre: 'genre3',
-        year: 'year3',
-        description: 'description3'
-      }
-    ]}
+    super(props)   
+    this.state = {name: props.name}
   }
 
-  async getStream() {
-    
-
+  componentDidMount = async () => {
+    let url = `http://localhost:8080/api/movie/${this.state.name}`
+    let response = await fetch(url)
+    let data = await response.json()
+    this.setState({
+      title: data.title,
+      vote_average: data.vote_average, 
+      vote_count: data.vote_count, 
+      poster_path: data.poster_path,
+      overview: data.overview,
+      release_date: data.release_date,
+      original_language: data.original_language
+    })
   }
 
   render() {
     return (
-      <div id="movieSection">
-        <h1>Movies</h1>
-        {this.state.movies.map(movie => (
-          <React.Fragment>
-            <Individual {...movie} />
-          </React.Fragment>
-        ))}
+      <div>
+        {this.state.title}
       </div>
     )
   }
 }
-
+/*
 function Individual(props) {
   return (
     <div id="movie">
@@ -88,5 +70,5 @@ function Individual(props) {
     </div>
   )
 }
-
+*/
 export default Movie

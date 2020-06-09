@@ -1,5 +1,9 @@
 import React from 'react'
-import axios from 'axios'
+import {
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom'
 import './NavigationBar.css'
 
 class NavigationBar extends React.Component {
@@ -19,7 +23,6 @@ class NavigationBar extends React.Component {
         'Accept': 'application/json'
       },
     }).then(res => {
-      console.log(res)
       if (res.status === 200) {
         this.setState({loggedIn: true})
       } else {
@@ -37,6 +40,7 @@ class NavigationBar extends React.Component {
   }
 
   registerSubmitHandler = async e => {
+    e.preventDefault()
     await this.submitHandler(e, 'http://localhost:8080/api/register', {
       username: this.state.username_register,
       password: this.state.password_register,
@@ -62,6 +66,7 @@ class NavigationBar extends React.Component {
   }
 
   loginSubmitHandler = async e => {
+    e.preventDefault()
     await this.submitHandler(e, 'http://localhost:8080/api/login', {
       username: this.state.username, 
       password: this.state.password
@@ -81,7 +86,6 @@ class NavigationBar extends React.Component {
   }
 
   submitHandler = async (e, route, data) => {
-    e.preventDefault()
     let response = await fetch(route, {
       method: 'POST',
       withCredentials: 'true',
@@ -96,6 +100,7 @@ class NavigationBar extends React.Component {
   }
 
   logoutHandler = async e => {
+    e.preventDefault()
     let response = await fetch('http://localhost:8080/api/logout', {
       method: 'GET',
       withCredentials: 'true',
@@ -109,9 +114,8 @@ class NavigationBar extends React.Component {
   }
 
   searchHandler = async e => {
-    let url = `http://localhost:8080/api/movie/${this.state.searched_movie}`
-    let response = await fetch(url)
-    alert(response.data === 'Not Found' ? 'movie not found' : 'movie found')
+    e.preventDefault()
+    this.props.history.push(`/movie/${this.state.searched_movie}`)
   }
 
   login = () => {
@@ -232,7 +236,7 @@ class NavigationBar extends React.Component {
         </div>
       )
     }
-    
+
     return (
       <div id="navigation_bar">
         <ul>
