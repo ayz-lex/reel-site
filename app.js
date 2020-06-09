@@ -19,9 +19,7 @@ app.use('/api/register', require('./api/auth/register'))
 app.use('/api/login', require('./api/auth/login'))
 app.use('/api/logout', require('./api/auth/logout'))
 app.use('/api/checkLogin', require('./api/auth/checkLogin'))
+app.use('/api/movieStream', require('./api/movieStream'))
 
-app.get('/', (req, res) => {
-  res.send('hello')
-})
 //port
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})
