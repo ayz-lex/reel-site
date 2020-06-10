@@ -19,7 +19,8 @@ router.get('/:movie', async (req, res) => {
       error: 'Movie Not Found'
     })
   }
-  res.send(data.results[0])
+  //need to manage this stream of data...
+  res.send(data.results)
 })
 
 module.exports = router
