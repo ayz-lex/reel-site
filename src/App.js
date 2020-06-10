@@ -9,6 +9,7 @@ import {BrowserRouter as Router, Switch, Route, useParams} from 'react-router-do
 class App extends React.Component{
   constructor(props) {
     super(props)
+    this.state = {}
   }
   
   render() {
@@ -16,25 +17,41 @@ class App extends React.Component{
       return <div> hello </div>
     }
 
-    const MovieComp = () => {
-      let {movie_name} = useParams()
-      return <Movie name={movie_name} />
+    const apiHelper = async (id, type) => {
+      let response = await fetch(`http://localhost:8080/api/${type}/${id}`)
+      let movie
+      if (response.status === 200) {
+        let data = await response.json()
+        data = {data: data, found: true}
+        movie = data
+      } else {
+        alert('Not found')
+        movie = {found: false}
+      }
+      this.setState({movie: movie})
     }
 
-    const ResultList = () => {
+    const MovieComp = () => {
+      let {movie_id} = useParams()
+      apiHelper(movie_id, 'movie')
+      return <Movie {...this.state.movie} />
+    }
+
+    const SearchComp = () => {
       let {keyword} = useParams()
-      return <Search keyword={keyword} />
+      apiHelper(keyword, 'search')
+      return <Search {...this.state.movie} />
     }
     
     return (
       <Router>
         <NavigationBar />
         <Switch>
-          <Route path="/movie/:movie_name">
+          <Route path="/movie/:movie_id">
             <MovieComp />
           </Route>
           <Route path="/search/:keyword">
-            <ResultList />
+            <SearchComp />
           </Route>
           <Route path="/">
             <Holder />
