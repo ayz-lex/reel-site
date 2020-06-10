@@ -14,12 +14,12 @@ app.use(cors({
 app.use(cookieParser())
 
 //api routes
-app.use('/api/movie', require('./api/movie'))
+app.use('/api/search', require('./api/search'))
 app.use('/api/register', require('./api/auth/register'))
 app.use('/api/login', require('./api/auth/login'))
 app.use('/api/logout', require('./api/auth/logout'))
 app.use('/api/checkLogin', require('./api/auth/checkLogin'))
-app.use('/api/movieStream', require('./api/movieStream'))
+app.use('/api/movie', require('./api/movie'))
 
 //port
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})

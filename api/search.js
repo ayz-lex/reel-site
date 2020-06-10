@@ -1,9 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const fetch = require('node-fetch')
+require('dotenv').config()
 
-router.get('/:movie_id', async (req, res) => {
-  let response = await fetch(`https://api.themoviedb.org/3/movie/${req.params.movie_id}?api_key=${process.env.API_KEY}`).catch(err => {
+router.get('/:movie', async (req, res) => {
+  let response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY}&query=${req.params.movie}`).catch(err => {
     res.status(500).json({
       error: 'Internal Error'
     })
@@ -13,12 +14,12 @@ router.get('/:movie_id', async (req, res) => {
       error: 'Internal Error'
     })
   })
-  if (data.status_code === 34) {
+  if (data.total_results === 0) {
     res.status(404).json({
-      error: data.status_message
+      error: 'Movie Not Found'
     })
   }
-  res.send(data)
+  res.send(data.results[0])
 })
 
 module.exports = router
