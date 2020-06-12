@@ -1,15 +1,12 @@
 import React from 'react'
-import {
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom'
 import './NavigationBar.css'
+import Search from './Search'
+import {BrowserRouter as Router, Redirect, Route, Switch, useParams} from 'react-router-dom'
 
 class NavigationBar extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {redirectSearch: false}
     this.checkSession()
   }
 
@@ -101,7 +98,7 @@ class NavigationBar extends React.Component {
 
   logoutHandler = async e => {
     e.preventDefault()
-    let response = await fetch('http://localhost:8080/api/logout', {
+    await fetch('http://localhost:8080/api/logout', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -115,7 +112,7 @@ class NavigationBar extends React.Component {
 
   searchHandler = async e => {
     e.preventDefault()
-    this.props.history.push(`/movie/${this.state.searched_movie}`)
+    this.setState({redirectSearch: true})
   }
 
   login = () => {
@@ -237,22 +234,39 @@ class NavigationBar extends React.Component {
       )
     }
 
-    return (
-      <div id="navigation_bar">
-        <ul>
-          {tabs}
-          <li>
-            <form onSubmit={this.searchHandler}>
-              <input 
-                type="text" 
-                onChange={this.changeHandler} 
-                name="searched_movie"
-                required
-              />
-              <button>Search</button>
-            </form>
-          </li>
-        </ul>
+    const SearchComp = () => {
+      return (
+        <div>
+          <Search keyword={this.state.searched_movie} />
+        </div>
+      )     
+    }
+
+    return !this.state.redirectSearch ? (
+        <div id="navigation_bar">
+          <ul>
+            {tabs}
+            <li>
+              <form onSubmit={this.searchHandler}>
+                <input 
+                  type="text" 
+                  onChange={this.changeHandler} 
+                  name="searched_movie"
+                  required
+                />
+                <button>Search</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+    ) : (
+      <div>
+        <Router>
+          <Redirect to={`/search/${this.state.searched_movie}`} />
+          <Switch>
+            <Route path="/search/:keyword" component={SearchComp}/>
+          </Switch>
+        </Router>
       </div>
     )
   }
