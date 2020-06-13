@@ -1,7 +1,8 @@
 import React from 'react'
 import NavigationBar from './NavigationBar'
+import {Link} from 'react-router-dom'
 
-class Search extends React.Component {
+class Watched extends React.Component {
   constructor(props) {
     super(props)
     this.state = {movieArray: [], found: false, keyword: props.keyword, fetching: true}
@@ -12,7 +13,7 @@ class Search extends React.Component {
   }
 
   fetchSearch = async () => {
-    let response = await fetch(`http://localhost:8080/api/search/${this.state.keyword}`)
+    let response = await fetch('http://localhost:8080/api/watched/')
     if (response.status === 200) {
       let data = await response.json()
       this.setState({movieArray: data, found: true, fetching: false})
@@ -29,9 +30,10 @@ class Search extends React.Component {
         </div>
       ) : (
         this.state.found ? (
-          <div> 
-            <NavigationBar />       
-            {this.state.movieArray[0].title}
+          <div>
+            {this.state.movieArray.map(movie => {
+              return <MovieBox {...movie} />
+            })} 
           </div>
         ) : (
         <div> not found</div>
@@ -40,4 +42,16 @@ class Search extends React.Component {
     )
   }
 }
-export default Search
+
+const MovieBox = (props) => {
+  const title = props.title
+  const id = props.id
+  return (
+    <div>
+      {title}
+      <Link to={`/movie/${id}`} > link to {title} </Link>
+    </div>
+  )
+}
+
+export default Watched

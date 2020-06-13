@@ -1,12 +1,12 @@
 import React from 'react'
 import './NavigationBar.css'
-import Search from './Search'
+import Watched from './Watched'
 import {BrowserRouter as Router, Redirect, Route, Switch, useParams} from 'react-router-dom'
 
 class NavigationBar extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {redirectSearch: false}
+    this.state = {loggedIn: false, redirectSearch: false}
     this.checkSession()
   }
 
@@ -154,7 +154,7 @@ class NavigationBar extends React.Component {
           <div>
             <input 
               type = 'text' 
-              name = 'password_password'
+              name = 'password_register'
               onChange = {this.changeHandler}
               required
             />
@@ -234,39 +234,22 @@ class NavigationBar extends React.Component {
       )
     }
 
-    const SearchComp = () => {
-      return (
-        <div>
-          <Search keyword={this.state.searched_movie} />
-        </div>
-      )     
-    }
-
-    return !this.state.redirectSearch ? (
-        <div id="navigation_bar">
-          <ul>
-            {tabs}
-            <li>
-              <form onSubmit={this.searchHandler}>
-                <input 
-                  type="text" 
-                  onChange={this.changeHandler} 
-                  name="searched_movie"
-                  required
-                />
-                <button>Search</button>
-              </form>
-            </li>
-          </ul>
-        </div>
-    ) : (
-      <div>
-        <Router>
-          <Redirect to={`/search/${this.state.searched_movie}`} />
-          <Switch>
-            <Route path="/search/:keyword" component={SearchComp}/>
-          </Switch>
-        </Router>
+    return (
+      <div id="navigation_bar">
+        <ul>
+          {tabs}
+          <li>
+            <form onSubmit={this.searchHandler}>
+              <input 
+                type="text" 
+                onChange={this.changeHandler} 
+                name="searched_movie"
+                required
+              />
+              <button>Search</button>
+            </form>
+          </li>
+        </ul>
       </div>
     )
   }

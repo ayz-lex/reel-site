@@ -5,7 +5,7 @@ import NavigationBar from './NavigationBar'
 class Movie extends React.Component {
   constructor(props) {
     super(props)   
-    this.state = {movie: {}, found: false, id: props.id, fetching: true}
+    this.state = {movie: {}, found: false, id: props.movie_id, fetching: true}
   }
 
   componentDidMount () {
@@ -28,7 +28,6 @@ class Movie extends React.Component {
     ) : (
       this.state.found ? (
         <div> 
-          <NavigationBar />
           {this.state.movie.title} 
         </div>
       ) : (
