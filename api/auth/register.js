@@ -27,40 +27,36 @@ const upsertMovie = async (value) => {
   }
 }
 
-const createUser = async (req) => {
+router.post('/', express.json(), async (req, res) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
     res.status(500).json({
       error: 'Internal Error'
     })
   })
+
   if (user === null) {
     const {username, password, occupation, age, movie1, movie2, movie3} = req.body
-    new_user
-    bcrypt.hash(password, 12, async (err, hash) => {
+    
+    const hash = await bcrypt.hash(password, 12, async (err, hash) => {
       if (err) {
         res.status(500).json({
           error: 'Internal Error'
         })
-      }  
-      new_user = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]}).catch(err => {
-        res.status(500).json({
-          error: 'Internal Error'
-        })
+      }
+    })  
+
+    user = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]}).catch(err => {
+      res.status(500).json({
+        error: 'Internal Error'
       })
     })
-    return new_user
-  } else {
-    return undefined
-  }
-}
 
-router.post('/', express.json(), async (req, res) => {
-  let user = await createUser(req)
-  if (user) {
     await upsertMovie(req.body.movie1)
     await upsertMovie(req.body.movie2)
     await upsertMovie(req.body.movie3) 
+    
     const payload = {username: user.username}
+
     const token = jwt.sign(payload, 'secret', {
       expiresIn: '1h'
     })
@@ -68,6 +64,7 @@ router.post('/', express.json(), async (req, res) => {
       httpOnly: true,
       secure: false
     }).sendStatus(200)
+
   } else {
     res.status(401).json({
       error: 'Username Taken'

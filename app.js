@@ -14,7 +14,7 @@ app.use(cors({
 app.use(cookieParser())
 
 //api routes
-app.use('/api/search', require('./api/search'))
+app.use('/api/watched', require('./api/watched'))
 app.use('/api/register', require('./api/auth/register'))
 app.use('/api/login', require('./api/auth/login'))
 app.use('/api/logout', require('./api/auth/logout'))
