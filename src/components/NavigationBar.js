@@ -210,15 +210,15 @@ class NavigationBar extends React.Component {
     if (this.state.loggedIn) {
       tabs = (
         <div>
-          <li><a href="#home">Home</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/profile">Profile</a></li>
           <li><button id="logout_button" onClick={this.logoutHandler}>Logout</button></li>
         </div>
       )
     } else {
       tabs = (
         <div>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#profile">Profile</a></li>
+          <li><a href="/">Home</a></li>
           <li class="dropdown">
             <a href="javascript:void(0)" class="dropbtn">Login</a>
             <div class="dropdown-content">

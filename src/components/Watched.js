@@ -13,7 +13,15 @@ class Watched extends React.Component {
   }
 
   fetchSearch = async () => {
-    let response = await fetch('http://localhost:8080/api/watched/')
+    let response = await fetch('http://localhost:8080/api/watched/', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    })
     if (response.status === 200) {
       let data = await response.json()
       this.setState({movieArray: data, found: true, fetching: false})

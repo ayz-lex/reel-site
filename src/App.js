@@ -21,11 +21,10 @@ class App extends React.Component{
       )
     }
 
-    const Watched = () => {
-      let {keyword} = useParams()
+    const Profile = () => {
       return (
         <div>
-          <Watched keyword={keyword} />
+          <Watched />
         </div>
       )     
     }
@@ -37,6 +36,7 @@ class App extends React.Component{
             <NavigationBar />
             <Switch>
               <Route path="/movie/:movie_id" component={MovieComp}/>
+              <Route path="/profile" component={Profile} />
               <Route exact path="/" component={Holder}/>
             </Switch>
           </div>
