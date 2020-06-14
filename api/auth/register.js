@@ -35,18 +35,31 @@ router.post('/', express.json(), async (req, res) => {
   })
 
   if (user === null) {
-    const {username, password, occupation, age, movie1, movie2, movie3} = req.body
-    
-    const hash = await bcrypt.hash(password, 12, async (err, hash) => {
+    const {
+      username, 
+      password, 
+      occupation, 
+      age, 
+      movie1, 
+      movie2, 
+      movie3
+    } = req.body
+
+    const hash = await bcrypt.hash(password, 12).catch(err => {
       if (err) {
         res.status(500).json({
           error: 'Internal Error'
         })
       }
     })  
-
-    user = await User.create({username: username, password: hash, occupation: occupation, age: age, watched: [movie1, movie2, movie3]}).catch(err => {
-      res.status(500).json({
+    
+    user = await User.create({
+      username: username, 
+      password: hash, 
+      occupation: occupation, 
+      age: age, 
+      watched: [movie1, movie2, movie3]}).catch(err => {
+        res.status(500).json({
         error: 'Internal Error'
       })
     })
