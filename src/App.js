@@ -11,12 +11,17 @@ class App extends React.Component{
     super(props)
 
     this.toggleLoggedIn = () => {
-      this.setState({isLoggedIn: !isLoggedIn})
+      this.setState({isLoggedIn: true})
     }    
+
+    this.toggleLoggedOut = () => {
+      this.setState({isLoggedIn: false})
+    }
 
     this.state = {
       isLoggedIn: false,
-      toggleLoggedIn: this.toggleLoggedIn
+      toggleLoggedIn: this.toggleLoggedIn,
+      toggleLoggedOut: this.toggleLoggedOut
     }
   }
 

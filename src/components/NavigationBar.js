@@ -1,26 +1,21 @@
 import React, {useState} from 'react'
 import './NavigationBar.css'
 import {LoggedinContext} from '../../contexts/LoggedinContext'
-import {BrowserRouter as Router, Redirect, Route, Switch, useParams} from 'react-router-dom'
 
 class NavigationBar extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {loggedIn: false}
-  }
 
   render() {
     return (
       <div id="navigation_bar">
         <LoggedinContext.Consumer>
-          {({isLoggedIn, toggleLoggedIn}) => (
+          {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => (
             <ul>
               {isLoggedIn ? (
                 <div>
                 <li><a href="/">Home</a></li>
                 <li><a href="/profile">Profile</a></li>
                 <li>
-                  <LogoutButton />
+                  <LogoutButton toggleLoggedOut={toggleLoggedOut}/>
                 </li>
               </div>
               ) : (
@@ -29,13 +24,13 @@ class NavigationBar extends React.Component {
                   <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">Login</a>
                     <div class="dropdown-content">
-                      <LoginButton toggleLoggedIn={toggleLoggedIn} />
+                      <LoginButton toggleLoggedIn={toggleLoggedIn} toggleLoggedOut={toggleLoggedOut} />
                     </div>
                   </li>
                   <li class="dropdown">
                     <a href="javascript:void(0)" class="dropbtn">Register</a>
                     <div class="dropdown-content">
-                      <RegisterButton toggleLoggedIn={toggleLoggedIn} />
+                      <RegisterButton toggleLoggedIn={toggleLoggedIn} toggleLoggedOut={toggleLoggedOut} />
                     </div>
                   </li>
                 </div>
@@ -63,6 +58,8 @@ const submitHandler = async (e, route, data) => {
 }
 
 const LogoutButton = (props) => {
+  const toggleLoggedOut = props.toggleLoggedOut
+
   logoutHandler = async e => {
     e.preventDefault()
     await fetch('http://localhost:8080/api/logout', {
@@ -74,8 +71,7 @@ const LogoutButton = (props) => {
         'Accept': 'application/json'
       },
     })
-    //change
-    this.setState({loggedIn: false})
+    toggleLoggedOut()
   }
   return (
     <button id="logout_button" onClick={logoutHandler}>Logout</button>
@@ -83,20 +79,21 @@ const LogoutButton = (props) => {
 }
 
 const LoginButton = (props) => {
-  
-  toggleLoggedIn = props.toggleLoggedIn
+  const toggleLoggedIn = props.toggleLoggedIn
+  const toggleLoggedOut = props.toggleLoggedOut
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const usernameChangeHandler = e => {
+    setUsername(e.target.value)
+  }
+  const passwordChangeHandler = e => {
+    setPassword(e.target.value)
+  }
+
   const loginSubmitHandler = async e => {
     e.preventDefault()
-
-    const usernameChangeHandler = e => {
-      setUsername(e.target.value)
-    }
-    const passwordChangeHandler = e => {
-      setPassword(e.target.value)
-    }
 
     await submitHandler(e, 'http://localhost:8080/api/login', {
       username: username, 
@@ -104,16 +101,16 @@ const LoginButton = (props) => {
     }).then(res => {
       if (res.status === 200) {
         alert('Login Succeeded')
-        //change later
-        this.state = {}
-        this.setState({loggedIn: true})
+        toggleLoggedIn()
       } else {
         const error = new Error(res.error)
         throw error
+        toggleLoggedOut()
       }
     }).catch(err => {
       console.error(err)
       alert('Error logging in')
+      toggleLoggedOut()
     })
   }
 
@@ -141,7 +138,9 @@ const LoginButton = (props) => {
 }
 
 const RegisterButton = (props) => {
-  toggleLoggedIn = props.toggleLoggedIn
+  const toggleLoggedIn = props.toggleLoggedIn
+  const toggleLoggedOut = props.toggleLoggedOut
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -155,23 +154,20 @@ const RegisterButton = (props) => {
   const registerSubmitHandler = async e => {
     e.preventDefault()
     await this.submitHandler(e, 'http://localhost:8080/api/register', {
-      username: this.state.username_register,
-      password: this.state.password_register
+      username: username,
+      password: password
     }).then(res => {
       if (res.status === 200) {
         alert('Register Succeeded')
-        //change later
-        this.state = {}
-        this.setState({loggedIn: true})
+        toggleLoggedIn()
       } else {
         const error = new Error(res.error)
         throw error
+        toggleLoggedOut()
       }
     }).catch(err => {
       alert('Register Failed')
-      //change later
-      this.state = {}
-      this.setState({loggedIn: false})
+      toggleLoggedOut()
     })
   }
 
