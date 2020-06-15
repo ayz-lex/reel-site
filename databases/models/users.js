@@ -8,15 +8,8 @@ module.exports = sequelize.define('users', {
   password: {
     type: DataTypes.TEXT
   },
-  occupation: {
-    type: DataTypes.STRING
-  },
-  age: {
-    type: DataTypes.INTEGER
-  },
   watched: {
-    type: DataTypes.ARRAY(DataTypes.STRING)
-
+    type: DataTypes.ARRAY(DataTypes.INTEGER)
   }
 }, {
   timestamps: false
