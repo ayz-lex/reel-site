@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './NavigationBar.css'
 import {LoggedinContext} from '../../contexts/LoggedinContext'
 import {BrowserRouter as Router, Redirect, Route, Switch, useParams} from 'react-router-dom'
@@ -7,24 +7,6 @@ class NavigationBar extends React.Component {
   constructor (props) {
     super(props)
     this.state = {loggedIn: false}
-  }
-
-  changeHandler = e => {
-    this.setState({[e.target.name]: e.target.value})
-  }
-
-  logoutHandler = async e => {
-    e.preventDefault()
-    await fetch('http://localhost:8080/api/logout', {
-      method: 'GET',
-      withCredentials: 'true',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-    })
-    this.setState({loggedIn: false})
   }
 
   render() {
@@ -37,7 +19,9 @@ class NavigationBar extends React.Component {
                 <div>
                 <li><a href="/">Home</a></li>
                 <li><a href="/profile">Profile</a></li>
-                <li><button id="logout_button" onClick={this.logoutHandler}>Logout</button></li>
+                <li>
+                  <LogoutButton />
+                </li>
               </div>
               ) : (
                 <div>
@@ -78,18 +62,49 @@ const submitHandler = async (e, route, data) => {
   return response
 }
 
+const LogoutButton = (props) => {
+  logoutHandler = async e => {
+    e.preventDefault()
+    await fetch('http://localhost:8080/api/logout', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    })
+    //change
+    this.setState({loggedIn: false})
+  }
+  return (
+    <button id="logout_button" onClick={logoutHandler}>Logout</button>
+  )
+}
+
 const LoginButton = (props) => {
   
   toggleLoggedIn = props.toggleLoggedIn
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const loginSubmitHandler = async e => {
     e.preventDefault()
-    await this.submitHandler(e, 'http://localhost:8080/api/login', {
-      username: this.state.username, 
-      password: this.state.password
+
+    const usernameChangeHandler = e => {
+      setUsername(e.target.value)
+    }
+    const passwordChangeHandler = e => {
+      setPassword(e.target.value)
+    }
+
+    await submitHandler(e, 'http://localhost:8080/api/login', {
+      username: username, 
+      password: password
     }).then(res => {
       if (res.status === 200) {
         alert('Login Succeeded')
+        //change later
         this.state = {}
         this.setState({loggedIn: true})
       } else {
@@ -109,14 +124,14 @@ const LoginButton = (props) => {
           <input
             type = 'text' 
             name = 'username' 
-            onChange = {this.changeHandler}
+            onChange = {usernameChangeHandler}
           />
         </div>
         <div>
           <input 
             type = 'text' 
             name = 'password'
-            onChange = {this.changeHandler}
+            onChange = {passwordChangeHandler}
           />
         </div>
         <button>Login</button>
@@ -127,20 +142,25 @@ const LoginButton = (props) => {
 
 const RegisterButton = (props) => {
   toggleLoggedIn = props.toggleLoggedIn
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const usernameChangeHandler = e => {
+    setUsername(e.target.value)
+  }
+  const passwordChangeHandler = e => {
+    setPassword(e.target.value)
+  }
 
   const registerSubmitHandler = async e => {
     e.preventDefault()
     await this.submitHandler(e, 'http://localhost:8080/api/register', {
       username: this.state.username_register,
-      password: this.state.password_register,
-      age: this.state.age,
-      occupation: this.state.occupation,
-      movie1: this.state.movie1,
-      movie2: this.state.movie2,
-      movie3: this.state.movie3
+      password: this.state.password_register
     }).then(res => {
       if (res.status === 200) {
         alert('Register Succeeded')
+        //change later
         this.state = {}
         this.setState({loggedIn: true})
       } else {
@@ -149,6 +169,7 @@ const RegisterButton = (props) => {
       }
     }).catch(err => {
       alert('Register Failed')
+      //change later
       this.state = {}
       this.setState({loggedIn: false})
     })
@@ -156,12 +177,12 @@ const RegisterButton = (props) => {
 
   return (
     <div>
-      <form onSubmit = {this.registerSubmitHandler}>
+      <form onSubmit = {registerSubmitHandler}>
         <div>
           <input
             type = 'text' 
             name = 'username_register' 
-            onChange = {this.changeHandler}
+            onChange = {usernameChangeHandler}
             required
           />
         </div>
@@ -169,47 +190,7 @@ const RegisterButton = (props) => {
           <input 
             type = 'text' 
             name = 'password_register'
-            onChange = {this.changeHandler}
-            required
-          />
-        </div>
-        <div>
-          <input 
-            type = 'number' 
-            name = 'age'
-            onChange = {this.changeHandler}
-            required
-          />
-        </div>
-        <div>
-          <input 
-            type = 'text' 
-            name = 'occupation'
-            onChange = {this.changeHandler}
-            required
-          />
-        </div>
-        <div>
-          <input 
-            type = 'text' 
-            name = 'movie1'
-            onChange = {this.changeHandler}
-            required
-          />
-        </div>
-        <div>
-          <input 
-            type = 'text' 
-            name = 'movie2'
-            onChange = {this.changeHandler}
-            required
-          />
-        </div>
-        <div>
-          <input 
-            type = 'text' 
-            name = 'movie3'
-            onChange = {this.changeHandler}
+            onChange = {passwordChangeHandler}
             required
           />
         </div>

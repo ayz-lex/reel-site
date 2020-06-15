@@ -20,28 +20,30 @@ class App extends React.Component{
     }
   }
 
+  checkSession = async () => {
+    await fetch('http://localhost:8080/api/checkLogin', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+    }).then(res => {
+      if (res.status === 200) {
+        this.setState({isLoggedIn: true})
+      } else {
+        const error = new Error(res.error)
+        throw error
+      }
+    }).catch(err => {
+      console.error(err)
+      this.setState({isLoggedIn: false})
+    })
+  }
+
   componentDidMount() {
-    checkSession = async () => {
-      await fetch('http://localhost:8080/api/checkLogin', {
-        method: 'GET',
-        withCredentials: 'true',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-      }).then(res => {
-        if (res.status === 200) {
-          this.setState({isLoggedIn: true})
-        } else {
-          const error = new Error(res.error)
-          throw error
-        }
-      }).catch(err => {
-        console.error(err)
-        this.setState({isLoggedIn: false})
-      })
-    }
+    this.checkSession()
   }
 
   render() {
