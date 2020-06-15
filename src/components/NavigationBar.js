@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import './NavigationBar.css'
-import {LoggedinContext} from '../../contexts/LoggedinContext'
+import {LoggedinContext} from '../contexts/LoggedinContext'
 
 class NavigationBar extends React.Component {
 
@@ -43,24 +43,10 @@ class NavigationBar extends React.Component {
   }
 }
 
-const submitHandler = async (e, route, data) => {
-  let response = await fetch(route, {
-    method: 'POST',
-    withCredentials: 'true',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  return response
-}
-
 const LogoutButton = (props) => {
   const toggleLoggedOut = props.toggleLoggedOut
 
-  logoutHandler = async e => {
+  const logoutHandler = async e => {
     e.preventDefault()
     await fetch('http://localhost:8080/api/logout', {
       method: 'GET',
@@ -95,9 +81,18 @@ const LoginButton = (props) => {
   const loginSubmitHandler = async e => {
     e.preventDefault()
 
-    await submitHandler(e, 'http://localhost:8080/api/login', {
-      username: username, 
-      password: password
+    await fetch('http://localhost:8080/api/login', {
+      method: 'POST',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username, 
+        password: password
+      })
     }).then(res => {
       if (res.status === 200) {
         alert('Login Succeeded')
@@ -153,9 +148,18 @@ const RegisterButton = (props) => {
 
   const registerSubmitHandler = async e => {
     e.preventDefault()
-    await this.submitHandler(e, 'http://localhost:8080/api/register', {
-      username: username,
-      password: password
+    await fetch('http://localhost:8080/api/register', {
+      method: 'POST',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username, 
+        password: password
+      })
     }).then(res => {
       if (res.status === 200) {
         alert('Register Succeeded')

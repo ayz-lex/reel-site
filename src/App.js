@@ -4,7 +4,7 @@ import Movie from './components/Movie.js'
 import Watched from './components/Watched.js'
 import NavigationBar from './components/NavigationBar.js'
 import {BrowserRouter as Router, Switch, Route, useParams} from 'react-router-dom'
-import {LoggedinContext} from '../contexts/LoggedinContext'
+import {LoggedinContext} from './contexts/LoggedinContext'
 
 class App extends React.Component{
   constructor(props) {
