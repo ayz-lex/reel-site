@@ -1,17 +1,21 @@
 import React from 'react'
 import './NavigationBar.css'
-import Watched from './Watched'
+import {LoggedinContext} from '../../contexts/LoggedinContext'
 import {BrowserRouter as Router, Redirect, Route, Switch, useParams} from 'react-router-dom'
 
 class NavigationBar extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {loggedIn: false, redirectSearch: false}
-    this.checkSession()
+    this.state = {loggedIn: false}
   }
 
-  checkSession = async () => {
-    await fetch('http://localhost:8080/api/checkLogin', {
+  changeHandler = e => {
+    this.setState({[e.target.name]: e.target.value})
+  }
+
+  logoutHandler = async e => {
+    e.preventDefault()
+    await fetch('http://localhost:8080/api/logout', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -19,8 +23,74 @@ class NavigationBar extends React.Component {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
+    })
+    this.setState({loggedIn: false})
+  }
+
+  render() {
+    return (
+      <div id="navigation_bar">
+        <LoggedinContext.Consumer>
+          {({isLoggedIn, toggleLoggedIn}) => (
+            <ul>
+              {isLoggedIn ? (
+                <div>
+                <li><a href="/">Home</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><button id="logout_button" onClick={this.logoutHandler}>Logout</button></li>
+              </div>
+              ) : (
+                <div>
+                  <li><a href="/">Home</a></li>
+                  <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Login</a>
+                    <div class="dropdown-content">
+                      <LoginButton toggleLoggedIn={toggleLoggedIn} />
+                    </div>
+                  </li>
+                  <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">Register</a>
+                    <div class="dropdown-content">
+                      <RegisterButton toggleLoggedIn={toggleLoggedIn} />
+                    </div>
+                  </li>
+                </div>
+              )}
+            </ul>
+          )}
+        </LoggedinContext.Consumer>
+      </div>
+    )
+  }
+}
+
+const submitHandler = async (e, route, data) => {
+  let response = await fetch(route, {
+    method: 'POST',
+    withCredentials: 'true',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  return response
+}
+
+const LoginButton = (props) => {
+  
+  toggleLoggedIn = props.toggleLoggedIn
+
+  const loginSubmitHandler = async e => {
+    e.preventDefault()
+    await this.submitHandler(e, 'http://localhost:8080/api/login', {
+      username: this.state.username, 
+      password: this.state.password
     }).then(res => {
       if (res.status === 200) {
+        alert('Login Succeeded')
+        this.state = {}
         this.setState({loggedIn: true})
       } else {
         const error = new Error(res.error)
@@ -28,15 +98,37 @@ class NavigationBar extends React.Component {
       }
     }).catch(err => {
       console.error(err)
-      this.setState({loggedIn: false})
+      alert('Error logging in')
     })
   }
 
-  changeHandler = e => {
-    this.setState({[e.target.name]: e.target.value})
-  }
+  return (
+    <div>
+      <form onSubmit = {loginSubmitHandler}>
+        <div>
+          <input
+            type = 'text' 
+            name = 'username' 
+            onChange = {this.changeHandler}
+          />
+        </div>
+        <div>
+          <input 
+            type = 'text' 
+            name = 'password'
+            onChange = {this.changeHandler}
+          />
+        </div>
+        <button>Login</button>
+      </form>
+    </div>
+  )
+}
 
-  registerSubmitHandler = async e => {
+const RegisterButton = (props) => {
+  toggleLoggedIn = props.toggleLoggedIn
+
+  const registerSubmitHandler = async e => {
     e.preventDefault()
     await this.submitHandler(e, 'http://localhost:8080/api/register', {
       username: this.state.username_register,
@@ -62,197 +154,69 @@ class NavigationBar extends React.Component {
     })
   }
 
-  loginSubmitHandler = async e => {
-    e.preventDefault()
-    await this.submitHandler(e, 'http://localhost:8080/api/login', {
-      username: this.state.username, 
-      password: this.state.password
-    }).then(res => {
-      if (res.status === 200) {
-        alert('Login Succeeded')
-        this.state = {}
-        this.setState({loggedIn: true})
-      } else {
-        const error = new Error(res.error)
-        throw error
-      }
-    }).catch(err => {
-      console.error(err)
-      alert('Error logging in')
-    })
-  }
-
-  submitHandler = async (e, route, data) => {
-    let response = await fetch(route, {
-      method: 'POST',
-      withCredentials: 'true',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    return response
-  }
-
-  logoutHandler = async e => {
-    e.preventDefault()
-    await fetch('http://localhost:8080/api/logout', {
-      method: 'GET',
-      withCredentials: 'true',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-    })
-    this.setState({loggedIn: false})
-  }
-
-  searchHandler = async e => {
-    e.preventDefault()
-    this.setState({redirectSearch: true})
-  }
-
-  login = () => {
-    return (
-      <div>
-        <form onSubmit = {this.loginSubmitHandler}>
-          <div>
-            <input
-              type = 'text' 
-              name = 'username' 
-              onChange = {this.changeHandler}
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'password'
-              onChange = {this.changeHandler}
-            />
-          </div>
-          <button>Login</button>
-        </form>
-      </div>
-    )
-  }
-
-  register = () => {
-    return (
-      <div>
-        <form onSubmit = {this.registerSubmitHandler}>
-          <div>
-            <input
-              type = 'text' 
-              name = 'username_register' 
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'password_register'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'number' 
-              name = 'age'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'occupation'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'movie1'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'movie2'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <div>
-            <input 
-              type = 'text' 
-              name = 'movie3'
-              onChange = {this.changeHandler}
-              required
-            />
-          </div>
-          <button>Register</button>
-        </form>
-      </div>
-    )
-  }
-
-  render() {
-    let tabs
-    if (this.state.loggedIn) {
-      tabs = (
+  return (
+    <div>
+      <form onSubmit = {this.registerSubmitHandler}>
         <div>
-          <li><a href="/">Home</a></li>
-          <li><a href="/profile">Profile</a></li>
-          <li><button id="logout_button" onClick={this.logoutHandler}>Logout</button></li>
+          <input
+            type = 'text' 
+            name = 'username_register' 
+            onChange = {this.changeHandler}
+            required
+          />
         </div>
-      )
-    } else {
-      tabs = (
         <div>
-          <li><a href="/">Home</a></li>
-          <li class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Login</a>
-            <div class="dropdown-content">
-              {this.login()}
-            </div></li>
-          <li class="dropdown">
-            <a href="javascript:void(0)" class="dropbtn">Register</a>
-            <div class="dropdown-content">
-              {this.register()}
-            </div>
-          </li>
+          <input 
+            type = 'text' 
+            name = 'password_register'
+            onChange = {this.changeHandler}
+            required
+          />
         </div>
-      )
-    }
-
-    return (
-      <div id="navigation_bar">
-        <ul>
-          {tabs}
-          <li>
-            <form onSubmit={this.searchHandler}>
-              <input 
-                type="text" 
-                onChange={this.changeHandler} 
-                name="searched_movie"
-                required
-              />
-              <button>Search</button>
-            </form>
-          </li>
-        </ul>
-      </div>
-    )
-  }
+        <div>
+          <input 
+            type = 'number' 
+            name = 'age'
+            onChange = {this.changeHandler}
+            required
+          />
+        </div>
+        <div>
+          <input 
+            type = 'text' 
+            name = 'occupation'
+            onChange = {this.changeHandler}
+            required
+          />
+        </div>
+        <div>
+          <input 
+            type = 'text' 
+            name = 'movie1'
+            onChange = {this.changeHandler}
+            required
+          />
+        </div>
+        <div>
+          <input 
+            type = 'text' 
+            name = 'movie2'
+            onChange = {this.changeHandler}
+            required
+          />
+        </div>
+        <div>
+          <input 
+            type = 'text' 
+            name = 'movie3'
+            onChange = {this.changeHandler}
+            required
+          />
+        </div>
+        <button>Register</button>
+      </form>
+    </div>
+  )
 }
 
 export default NavigationBar
