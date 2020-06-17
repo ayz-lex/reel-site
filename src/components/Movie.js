@@ -1,6 +1,5 @@
 import React from 'react'
 import './Movie.css'
-import NavigationBar from './NavigationBar'
 
 class Movie extends React.Component {
   constructor(props) {
@@ -22,13 +21,29 @@ class Movie extends React.Component {
     }
   }
 
+  watchedHandler = async e => {
+    e.preventDefault()
+    await fetch('http://localhost:8080/api/logout', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: this.state.movie.id
+      })
+    })
+    
+  }
+
   render() {
     return this.state.fetching ? (
       <div> fetching </div>
     ) : (
       this.state.found ? (
         <div> 
-          {this.state.movie.title} 
+          <div id="movie">
+            <h1 id="title">
+              {this.state.movie.title}
+            </h1>
+            <button id="watched_button" onClick={this.watchedHandler}>Watched?</button>
+          </div>
         </div>
       ) : (
       <div> not found</div>

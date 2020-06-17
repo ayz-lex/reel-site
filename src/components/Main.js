@@ -12,6 +12,7 @@ class Main extends React.Component {
     //do error checking later
     let response = await fetch('http://localhost:8080/api/recommendations')
     let data = await response.json()
+    //do this because watched array will be comparatively small
     const watched = this.state.watched
     let movies = data.filter(movie => {
       return watched.find(watchedMovie => {
@@ -27,7 +28,7 @@ class Main extends React.Component {
     this.setState({watched: data})
   }
 
-  getMovies (isLoggedIn) {
+  getMovies(isLoggedIn) {
     if (isLoggedIn) {
       this.fetchWatched()
     }
@@ -37,9 +38,9 @@ class Main extends React.Component {
   render() {
     return (
       <LoggedinContext.Consumer>
-        {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => (
+        {({isLoggedIn}) => (
           <div>
-            {this.getMovies()}
+            {this.getMovies(isLoggedIn)}
             {this.state.fetching ? (
               <div> fetching </div>
             ) : (
