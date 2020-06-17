@@ -14,11 +14,9 @@ router.get('/', async (req, res) => {
       error: 'Internal Error'
     })
   })
-
   let movieArray = data.results.filter(movie => {
     return movie.popularity >= 29
   })
-
   res.send(movieArray)
 })
 
