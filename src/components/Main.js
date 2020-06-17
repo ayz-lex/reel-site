@@ -1,42 +1,54 @@
 import React from 'react'
-import {LoggedinContext} from './contexts/LoggedinContext'
+import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
 
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {movies: [], fetching: true}
+    this.state = {movies: [], fetching: true, watched: []}
   }
 
-  async fetchMovies(watched) {
+  async fetchMovies() {
     //do error checking later
-
     let response = await fetch('http://localhost:8080/api/recommendations')
     let data = await response.json()
-    this.setState({movies: data, fetching: false})
+    const watched = this.state.watched
+    let movies = data.filter(movie => {
+      return watched.find(watchedMovie => {
+        return watchedMovie.id === movie.id
+      }) === undefined
+    })
+    this.setState({movies: movies, fetching: false})
   }
 
-  fetchUnwatched() {
-    //do later
+  async fetchWatched() {
+    let response = await fetch('http://localhost:8080/api/watched')
+    let data = await response.json()
+    this.setState({watched: data})
+  }
+
+  getMovies (isLoggedIn) {
+    if (isLoggedIn) {
+      this.fetchWatched()
+    }
+    this.fetchMovies()
   }
 
   render() {
     return (
       <LoggedinContext.Consumer>
-        {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => {
-          isLoggedIn ? (
-            this.fetchunWatched([])
-          ) : (
-            this.fetchMovies()
-          )
-          this.state.fetching ? (
-            <div> fetching </div>
-          ) : (
-            this.state.movies.map(movie => {
-              return <Movie movie_id={movie.id} />
-            })
-          )
-        }}
+        {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => (
+          <div>
+            {this.getMovies()}
+            {this.state.fetching ? (
+              <div> fetching </div>
+            ) : (
+              this.state.movies.map(movie => {
+                return <Movie movie_id={movie.id} />
+              })
+            )}
+          </div>
+        )}
       </LoggedinContext.Consumer>
     )
   }
