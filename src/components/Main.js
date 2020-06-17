@@ -17,28 +17,29 @@ class Main extends React.Component {
   }
 
   fetchUnwatched() {
-    
+    //do later
   }
 
   render() {
     return (
       <LoggedinContext.Consumer>
         {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => {
-          {isLoggedIn ? (
+          isLoggedIn ? (
             this.fetchunWatched([])
           ) : (
             this.fetchMovies()
-            this.state.fetching ? (
-              <div> fetching </div>
-            ) : (
-              this.state.movies.map(movie => {
-
-              })
-            )
-          )}
+          )
+          this.state.fetching ? (
+            <div> fetching </div>
+          ) : (
+            this.state.movies.map(movie => {
+              return <Movie movie_id={movie.id} />
+            })
+          )
         }}
       </LoggedinContext.Consumer>
     )
   }
 }
 
+export default Main

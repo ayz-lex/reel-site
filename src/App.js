@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Movie from './components/Movie.js'
 import Watched from './components/Watched.js'
+import Main from './components/Main.js'
 import NavigationBar from './components/NavigationBar.js'
 import {BrowserRouter as Router, Switch, Route, useParams} from 'react-router-dom'
 import {LoggedinContext} from './contexts/LoggedinContext'
@@ -54,7 +55,9 @@ class App extends React.Component{
   render() {
 
     const MainComp = () => {
-      return <div>hel</div>
+      return <div>
+        <Main />
+      </div>
     }
 
     const MovieComp = () => {
