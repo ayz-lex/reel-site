@@ -1,5 +1,4 @@
 import React from 'react'
-import NavigationBar from './NavigationBar'
 import {Link} from 'react-router-dom'
 
 class Watched extends React.Component {

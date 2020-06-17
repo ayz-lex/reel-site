@@ -52,7 +52,8 @@ class App extends React.Component{
   }
 
   render() {
-    const Holder = () => {
+
+    const MainComp = () => {
       return <div>hel</div>
     }
 
@@ -65,7 +66,7 @@ class App extends React.Component{
       )
     }
 
-    const Profile = () => {
+    const ProfileComp = () => {
       return (
         <div>
           <Watched />
@@ -81,8 +82,8 @@ class App extends React.Component{
               <NavigationBar />
               <Switch>
                 <Route path="/movie/:movie_id" component={MovieComp}/>
-                <Route path="/profile" component={Profile} />
-                <Route exact path="/" component={Holder}/>
+                <Route path="/profile" component={ProfileComp} />
+                <Route exact path="/" component={MainComp}/>
               </Switch>
             </div>
           </Router>
