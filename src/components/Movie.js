@@ -4,7 +4,7 @@ import './Movie.css'
 class Movie extends React.Component {
   constructor(props) {
     super(props)   
-    this.state = {movie: {}, found: false, id: props.movie_id, fetching: true}
+    this.state = {movie: {}, found: false, id: props.movie_id, remover: props.remover, fetching: true}
   }
 
   componentDidMount () {
@@ -23,13 +23,20 @@ class Movie extends React.Component {
 
   watchedHandler = async e => {
     e.preventDefault()
-    await fetch('http://localhost:8080/api/logout', {
+    console.log('here')
+    await fetch('http://localhost:8080/api/setWatched', {
       method: 'POST',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: JSON.stringify({
         id: this.state.movie.id
       })
     })
-    
+    this.state.remover(this.state.movie.id)
   }
 
   render() {

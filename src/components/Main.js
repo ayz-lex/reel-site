@@ -23,7 +23,15 @@ class Main extends React.Component {
   }
 
   async fetchWatched() {
-    let response = await fetch('http://localhost:8080/api/watched')
+    let response = await fetch('http://localhost:8080/api/watched', {
+      method: 'GET',
+      withCredentials: 'true',
+      credentials: 'include',
+      header: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
     let data = await response.json()
     this.setState({watched: data})
   }
@@ -35,17 +43,27 @@ class Main extends React.Component {
     this.fetchMovies()
   }
 
+  remover = (id) => {
+    let newMovies = this.state.movies.filter(movie => {
+      return movie.id !== id
+    })
+    this.setState({movies: newMovies})
+  }
+
   render() {
+
     return (
       <LoggedinContext.Consumer>
         {({isLoggedIn}) => (
           <div>
-            {this.getMovies(isLoggedIn)}
             {this.state.fetching ? (
-              <div> fetching </div>
+              <div> 
+                fetching 
+                {this.getMovies(isLoggedIn)}
+              </div>
             ) : (
               this.state.movies.map(movie => {
-                return <Movie movie_id={movie.id} />
+                return <Movie movie_id={movie.id} remover={this.remover}/>
               })
             )}
           </div>
