@@ -5,21 +5,37 @@ import Movie from './Movie'
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {movies: [], fetching: true, watched: []}
+    this.state = {movies: [], numMovies: 0, fetching: true, watched: [], page: 1}
   }
 
   async fetchMovies() {
     //do error checking later
-    let response = await fetch('http://localhost:8080/api/recommendations')
-    let data = await response.json()
-    //do this because watched array will be comparatively small
-    const watched = this.state.watched
-    let movies = data.filter(movie => {
-      return watched.find(watchedMovie => {
-        return watchedMovie.id === movie.id
-      }) === undefined
+    let numberOfAddedMovies = 0
+    let addedMovies = []
+    let curPage = this.state.page
+    while (this.state.movies + numberOfAddedMovies < 10) {
+      let response = await fetch(`http://localhost:8080/api/recommendations/${curPage}`)
+      let data = await response.json()
+      //do this because watched array will be comparatively small
+      const watched = this.state.watched
+      let movies = data.filter(movie => {
+        if (watched.find(watchedMovie => {
+          return watchedMovie.id === movie.id
+        }) === undefined) {
+          numberOfAddedMovies++
+          return true
+        }
+        return false
+      })
+      addedMovies = addedMovies.concat(movies)
+      curPage++
+    }
+    this.setState({
+      numMovies: this.state.numMovies + numberOfAddedMovies, 
+      movies: this.state.movies.concat(addedMovies), 
+      page: curPage, 
+      fetching: false
     })
-    this.setState({movies: movies, fetching: false})
   }
 
   async fetchWatched() {
@@ -47,7 +63,7 @@ class Main extends React.Component {
     let newMovies = this.state.movies.filter(movie => {
       return movie.id !== id
     })
-    this.setState({movies: newMovies})
+    this.setState({movies: newMovies, numMovies: this.state.numMovies - 1})
   }
 
   render() {
