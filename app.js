@@ -21,6 +21,7 @@ app.use('/api/logout', require('./api/auth/logout'))
 app.use('/api/checkLogin', require('./api/auth/checkLogin'))
 app.use('/api/movie', require('./api/movie'))
 app.use('/api/recommendations', require('./api/recommendations'))
+app.use('/api/setWatched', require('./api/setWatched'))
 
 //port
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})

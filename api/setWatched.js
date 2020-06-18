@@ -1,25 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../databases/models/users')
+const sequelize = require('../databases/database')
+const authChecker = require('../middleware/authChecker')
+const jwt = require('jsonwebtoken')
 
-router.post('/api/setWatched', authChecker, express.json(), async (req, res) => {
+router.post('/', authChecker, express.json(), async (req, res) => {
   const token = req.cookies.token
   const decoded = jwt.decode(token)
   const username = decoded.username
 
-  const user = await User.findOne({where: {username: username}}).catch(err => {
-    res.status(500).json({
-      error: 'Internal Error'
-    })
-  })
-
-  user.watched.push(req.body.id)
-
-  await user.save().catch(err => {
-    res.status(500).json({
-      error: 'Internal Error'
-    })
-  })
+  //any better way of doing this?
+  await User.update(
+    {
+      watched: sequelize.fn('array_append', sequelize.col('watched'), req.body.id)
+    },
+    {
+      where: {
+        username: username
+      }
+    }
+  )
   
   res.sendStatus(200)
 })
+
+module.exports = router
