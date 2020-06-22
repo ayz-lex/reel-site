@@ -8,13 +8,15 @@ class Main extends React.Component {
     this.state = {movies: [], numMovies: 0, fetching: true, watched: [], page: 1}
   }
 
+  componentDidUpdate = () => {
+    this.fetchMovies()
+  }
+
   async fetchMovies() {
     //do error checking later
-    let numberOfAddedMovies = 0
-    let addedMovies = []
-    let curPage = this.state.page
-    while (this.state.movies + numberOfAddedMovies < 10) {
-      let response = await fetch(`http://localhost:8080/api/recommendations/${curPage}`)
+    if (this.state.numMovies < 10) {
+      let numberOfAddedMovies = 0
+      let response = await fetch(`http://localhost:8080/api/recommendations/${this.state.page}`)
       let data = await response.json()
       //do this because watched array will be comparatively small
       const watched = this.state.watched
@@ -27,15 +29,11 @@ class Main extends React.Component {
         }
         return false
       })
-      addedMovies = addedMovies.concat(movies)
-      curPage++
+      this.state.movies = this.state.movies.concat(movies)
+      this.state.numMovies += numberOfAddedMovies
+      this.state.page += 1
+      this.setState({fetching: false})
     }
-    this.setState({
-      numMovies: this.state.numMovies + numberOfAddedMovies, 
-      movies: this.state.movies.concat(addedMovies), 
-      page: curPage, 
-      fetching: false
-    })
   }
 
   async fetchWatched() {
@@ -49,25 +47,25 @@ class Main extends React.Component {
       }
     })
     let data = await response.json()
-    this.setState({watched: data})
+    this.state.watched = data
   }
 
-  getMovies(isLoggedIn) {
+  getWatched(isLoggedIn) {
     if (isLoggedIn) {
       this.fetchWatched()
     }
-    this.fetchMovies()
+    this.setState({fetching: false})
   }
 
   remover = (id) => {
     let newMovies = this.state.movies.filter(movie => {
       return movie.id !== id
     })
-    this.setState({movies: newMovies, numMovies: this.state.numMovies - 1})
+    this.state.movies = newMovies
+    this.setState({numMovies: --this.state.numMovies})
   }
 
   render() {
-
     return (
       <LoggedinContext.Consumer>
         {({isLoggedIn}) => (
@@ -75,7 +73,7 @@ class Main extends React.Component {
             {this.state.fetching ? (
               <div> 
                 fetching 
-                {this.getMovies(isLoggedIn)}
+                {this.getWatched(isLoggedIn)}
               </div>
             ) : (
               this.state.movies.map(movie => {

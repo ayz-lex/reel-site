@@ -1,5 +1,6 @@
 import React from 'react'
 import './Movie.css'
+//id serial username charvar 255 password text watched integer[]
 
 class Movie extends React.Component {
   constructor(props) {
@@ -23,7 +24,6 @@ class Movie extends React.Component {
 
   watchedHandler = async e => {
     e.preventDefault()
-    console.log('here')
     await fetch('http://localhost:8080/api/setWatched', {
       method: 'POST',
       withCredentials: 'true',
