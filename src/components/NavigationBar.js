@@ -1,5 +1,8 @@
 import React, {useState} from 'react'
 import './NavigationBar.css'
+import Breadcrumbs from '@material-ui/core/Breadcrumbs'
+import Chip from '@material-ui/core/Chip'
+import {emphasize, withStyles } from '@material-ui/core/styles'
 import {LoggedinContext} from '../contexts/LoggedinContext'
 
 class NavigationBar extends React.Component {
@@ -9,6 +12,7 @@ class NavigationBar extends React.Component {
       <div id="navigation_bar">
         <LoggedinContext.Consumer>
           {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => (
+            /*
             <ul>
               {isLoggedIn ? (
                 <div>
@@ -36,6 +40,8 @@ class NavigationBar extends React.Component {
                 </div>
               )}
             </ul>
+            */
+           <NavBar isLoggedIn={isLoggedIn} toggleLoggedIn={toggleLoggedIn} toggleLoggedOut={toggleLoggedOut} />
           )}
         </LoggedinContext.Consumer>
       </div>
@@ -43,7 +49,51 @@ class NavigationBar extends React.Component {
   }
 }
 
+const StyledBreadcrumb = withStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.grey[100],
+    height: theme.spacing(3),
+    color: theme.palette.grey[800],
+    fontWeight: theme.typography.fontWeightRegular,
+    '&:hover, &:focus': {
+      backgroundColor: theme.palette.grey[300],
+    },
+    '&:active': {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(theme.palette.grey[300], 0.12),
+    },
+  },
+}))(Chip)
+
+const NavBar = (props) => {
+  return (
+    <Breadcrumbs aria-label="breadcrumb">
+      <StyledBreadcrumb 
+          component="a"
+          href="/"
+          label="Home"
+      />
+      {props.isLoggedIn ? (
+        <React.Fragment>
+          <StyledBreadcrumb 
+            component="a"
+            href="/profile"
+            label="Profile"
+          />
+          <LogoutButton toggledLoggedOut={props.toggleLoggedOut} />
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <LoginButton toggleLoggedIn={props.toggleLoggedIn} toggleLoggedOut={props.toggleLoggedOut} />
+          <RegisterButton toggleLoggedIn={props.toggleLoggedIn} toggleLoggedOut={props.toggleLoggedOut} />
+        </React.Fragment>
+      )}
+    </Breadcrumbs>
+  )
+}
+
 const LogoutButton = (props) => {
+  
   const toggleLoggedOut = props.toggleLoggedOut
 
   const logoutHandler = async e => {
@@ -59,8 +109,12 @@ const LogoutButton = (props) => {
     })
     toggleLoggedOut()
   }
+
   return (
-    <button id="logout_button" onClick={logoutHandler}>Logout</button>
+    <StyledBreadcrumb
+      label="Logout"
+      onClick={logoutHandler}
+    />
   )
 }
 
@@ -109,7 +163,7 @@ const LoginButton = (props) => {
     })
   }
 
-  return (
+  return (  
     <div>
       <form onSubmit = {loginSubmitHandler}>
         <div>
