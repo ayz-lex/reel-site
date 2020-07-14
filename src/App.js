@@ -85,7 +85,7 @@ class App extends React.Component{
       root: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
       },
       form: {
         '& > *': {
@@ -146,31 +146,35 @@ class App extends React.Component{
       const classes = useStyles()
     
       return (  
-        <Box className={classes.root}>
-          <form className={classes.form}>
-            <div>
-              <TextField
-                type = 'text' 
-                name = 'username' 
-                variant='outlined'
-                label='Enter Username'
-                onChange = {usernameChangeHandler}
-                required
-              />
-            </div>
-            <div>
-              <TextField 
-                type = 'password' 
-                name = 'password'
-                variant='outlined'
-                label='Enter Password'
-                onChange = {passwordChangeHandler}
-                required
-              />
-            </div>
-          </form>
-          <Button className={classes.button} variant="contained" onClick={loginSubmitHandler}>Login</Button>
-        </Box>
+        <React.Fragment>
+          <Box className={classes.root}>
+            <form className={classes.form}>
+              <div>
+                <TextField
+                  type = 'text' 
+                  name = 'username' 
+                  variant='outlined'
+                  label='Enter Username'
+                  onChange = {usernameChangeHandler}
+                  required
+                />
+              </div>
+              <div>
+                <TextField 
+                  type = 'password' 
+                  name = 'password'
+                  variant='outlined'
+                  label='Enter Password'
+                  onChange = {passwordChangeHandler}
+                  required
+                />
+              </div>
+            </form>
+          </Box>
+          <Box className={classes.root}>
+            <Button className={classes.button} variant="contained" onClick={loginSubmitHandler}>Login</Button>
+          </Box>
+        </React.Fragment>
       )
     }
 
