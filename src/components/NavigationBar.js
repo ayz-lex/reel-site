@@ -11,8 +11,8 @@ class NavigationBar extends React.Component {
     return (
       <div id="navigation_bar">
         <LoggedinContext.Consumer>
-          {({isLoggedIn, toggleLoggedIn, toggleLoggedOut}) => (
-           <NavBar isLoggedIn={isLoggedIn} toggleLoggedIn={toggleLoggedIn} toggleLoggedOut={toggleLoggedOut} />
+          {({isLoggedIn, toggleLoggedOut}) => (
+           <NavBar isLoggedIn={isLoggedIn} toggleLoggedOut={toggleLoggedOut} />
           )}
         </LoggedinContext.Consumer>
       </div>
@@ -50,7 +50,7 @@ const NavBar = (props) => {
           href="/profile"
           label="Profile"
         />
-        <LogoutButton toggledLoggedOut={props.toggleLoggedOut} />
+        <LogoutButton toggleLoggedOut={props.toggleLoggedOut} />
       </Breadcrumbs>
     ) : (
       <Breadcrumbs aria-label="breadcrumb">

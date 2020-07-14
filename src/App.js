@@ -5,9 +5,11 @@ import Watched from './components/Watched.js'
 import Main from './components/Main.js'
 import TextField from '@material-ui/core/TextField'
 import NavigationBar from './components/NavigationBar.js'
-import {BrowserRouter as Router, Switch, Route, useParams} from 'react-router-dom'
+import Box from '@material-ui/core/Box'
+import {BrowserRouter as Router, Switch, Route, useParams, Redirect} from 'react-router-dom'
 import {LoggedinContext} from './contexts/LoggedinContext'
 import {makeStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
 class App extends React.Component{
   constructor(props) {
@@ -81,10 +83,19 @@ class App extends React.Component{
 
     const useStyles = makeStyles((theme) => ({
       root: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      },
+      form: {
         '& > *': {
           margin: theme.spacing(1),
           width: '25ch',
+          marginLeft: '5px'
         },
+      },
+      button: {
+        marginLeft: '5px'
       },
     }))
 
@@ -135,8 +146,8 @@ class App extends React.Component{
       const classes = useStyles()
     
       return (  
-        <div>
-          <form className={classes.root} onSubmit = {loginSubmitHandler}>
+        <Box className={classes.root}>
+          <form className={classes.form}>
             <div>
               <TextField
                 type = 'text' 
@@ -149,7 +160,7 @@ class App extends React.Component{
             </div>
             <div>
               <TextField 
-                type = 'text' 
+                type = 'password' 
                 name = 'password'
                 variant='outlined'
                 label='Enter Password'
@@ -157,9 +168,9 @@ class App extends React.Component{
                 required
               />
             </div>
-            <button>Login</button>
           </form>
-        </div>
+          <Button className={classes.button} variant="contained" onClick={loginSubmitHandler}>Login</Button>
+        </Box>
       )
     }
 
@@ -208,8 +219,8 @@ class App extends React.Component{
       const classes = useStyles()
 
       return (
-        <div>
-          <form className={classes.root} onSubmit = {registerSubmitHandler}>
+        <Box className={classes.root}>
+          <form className={classes.form} >
             <div>
               <TextField
                 type='text'
@@ -222,7 +233,7 @@ class App extends React.Component{
             </div>
             <div>
               <TextField 
-                type='text' 
+                type='password' 
                 name='password_register'
                 label="Enter Password"
                 variant="outlined"
@@ -230,9 +241,9 @@ class App extends React.Component{
                 required
               />
             </div>
-            <button>Register</button>
           </form>
-        </div>
+          <Button className={classes.button} variant="contained" onClick={registerSubmitHandler}>Register</Button>
+        </Box>
       )
     }
      
@@ -242,13 +253,21 @@ class App extends React.Component{
           <Router>
             <div>
               <NavigationBar />
-              <Switch>
-                <Route path="/movie/:movie_id" component={MovieComp}/>
-                <Route path="/profile" component={ProfileComp} />
-                <Route path="/login" component={LoginComp} />
-                <Route path="/signup" component={SignupComp} />
-                <Route exact path="/" component={MainComp}/>
-              </Switch>
+                {this.state.isLoggedIn ? (
+                <Switch>
+                  <Route path="/movie/:movie_id" component={MovieComp}/>
+                  <Route path="/profile" component={ProfileComp} />
+                  <Redirect from="/login" to="/" />
+                  <Redirect from="/signup" to="/" />
+                  <Route exact path="/" component={MainComp}/>
+                </Switch>
+                ) : (
+                <Switch>
+                  <Route path="/login" component={LoginComp} />
+                  <Route path="/signup" component={SignupComp} />
+                  <Route exact path="/" component={MainComp}/>
+                </Switch>
+                )}
             </div>
           </Router>
         </LoggedinContext.Provider>
