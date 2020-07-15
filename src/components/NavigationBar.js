@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import './NavigationBar.css'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Chip from '@material-ui/core/Chip'
-import {emphasize, withStyles } from '@material-ui/core/styles'
+import {emphasize, withStyles, makeStyles } from '@material-ui/core/styles'
 import {LoggedinContext} from '../contexts/LoggedinContext'
+import Box from '@material-ui/core/Box'
 
 class NavigationBar extends React.Component {
 
@@ -37,23 +38,36 @@ const StyledBreadcrumb = withStyles((theme) => ({
 }))(Chip)
 
 const NavBar = (props) => {
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      paddingTop: '10px'
+    }
+  }))
+  
+  const classes = useStyles()
+
   return (
     props.isLoggedIn ? (
-      <Breadcrumbs aria-label="breadcrumb">
-        <StyledBreadcrumb 
-          component="a"
-          href="/"
-          label="Home"
-        />
-        <StyledBreadcrumb 
-          component="a"
-          href="/profile"
-          label="Profile"
-        />
-        <LogoutButton toggleLoggedOut={props.toggleLoggedOut} />
-      </Breadcrumbs>
+      <Box className={classes.root}>
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledBreadcrumb 
+            component="a"
+            href="/"
+            label="Home"
+          />
+          <StyledBreadcrumb 
+            component="a"
+            href="/profile"
+            label="Profile"
+          />
+          <LogoutButton toggleLoggedOut={props.toggleLoggedOut} />
+        </Breadcrumbs>
+      </Box>
     ) : (
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs aria-label="breadcrumb" className={classes.root}>
         <StyledBreadcrumb 
           component="a"
           href="/"
