@@ -3,6 +3,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
@@ -11,6 +12,10 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 14,
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%'
   },
   pos: {
     marginBottom: 12,
@@ -59,7 +64,7 @@ class Movie extends React.Component {
       <div> fetching </div>
     ) : (      
       this.state.found ? (
-        <MovieCard />
+        <MovieCard {...this.state.movie}/>
         /*
         <div> 
           <div id="movie">
@@ -83,7 +88,7 @@ const MovieCard = (props) => {
     <Card className={classes.root}>
       <CardContent>
         <Typography className={classes.title} color = "textSecondary" gutterBottom>
-          title
+          {props.title}
         </Typography>
         <Typography variant="h5" component="h2">
           movietitle
@@ -97,6 +102,11 @@ const MovieCard = (props) => {
           post break
         </Typography>
       </CardContent>
+      <CardMedia 
+        image={`https://image.tmdb.org/t/p/w400/${props.poster_path}`}
+        title='image'
+        className={classes.media}
+      />
     </Card>
   )
 }

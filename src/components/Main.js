@@ -1,18 +1,36 @@
 import React from 'react'
 import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
+import Container from '@material-ui/core/Container'
+import {withStyles} from '@material-ui/core/styles'
+
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  }
+}
 
 class Main extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {movies: [], numMovies: 0, fetching: true, watched: [], page: 1}
+    this.state = {
+      movies: [], 
+      numMovies: 0, 
+      fetching: true, 
+      watched: [], 
+      page: 1, 
+      curMovie: [],
+    }
   }
 
   componentDidUpdate = () => {
     this.fetchMovies()
   }
 
-  async fetchMovies() {
+  fetchMovies = async () => {
     //do error checking later
     if (this.state.numMovies < 10) {
       let numberOfAddedMovies = 0
@@ -29,14 +47,20 @@ class Main extends React.Component {
         }
         return false
       })
-      this.state.movies = this.state.movies.concat(movies)
-      this.state.numMovies += numberOfAddedMovies
-      this.state.page += 1
-      this.setState({fetching: false})
+
+      const newMovies = this.state.movies.concat(movies)
+
+      this.setState({
+        movies: newMovies, 
+        numMovies: this.state.numMovies + numberOfAddedMovies, 
+        page: this.state.page + 1, 
+        fetching: false,
+        curMovie: [newMovies[0]]
+      })
     }
   }
 
-  async fetchWatched() {
+  fetchWatched = async () => {
     let response = await fetch('http://localhost:8080/api/watched', {
       method: 'GET',
       withCredentials: 'true',
@@ -47,44 +71,49 @@ class Main extends React.Component {
       }
     })
     let data = await response.json()
-    this.state.watched = data
+    this.setState({fetching: false, watched: data})
   }
 
-  getWatched(isLoggedIn) {
+  getWatched = (isLoggedIn) => {
     if (isLoggedIn) {
       this.fetchWatched()
+    } else {
+      this.setState({fetching: false})
     }
-    this.setState({fetching: false})
   }
 
   remover = (id) => {
     let newMovies = this.state.movies.filter(movie => {
       return movie.id !== id
     })
-    this.state.movies = newMovies
-    this.setState({numMovies: --this.state.numMovies})
+    this.setState({
+      movies: newMovies, 
+      numMovies: --this.state.numMovies,
+      curMovie: [newMovies[0]],
+    })
   }
 
-  render() {
+  render = () => {
+    const {classes} = this.props
     return (
       <LoggedinContext.Consumer>
         {({isLoggedIn}) => (
-          <div>
+          <Container className={classes.root}>
             {this.state.fetching ? (
               <div> 
                 fetching 
                 {this.getWatched(isLoggedIn)}
               </div>
             ) : (
-              this.state.movies.map(movie => {
-                return <Movie movie_id={movie.id} remover={this.remover}/>
+              this.state.curMovie.map(movie => {
+                return <Movie movie_id={movie.id} />
               })
             )}
-          </div>
+          </Container>
         )}
       </LoggedinContext.Consumer>
     )
   }
 }
 
-export default Main
+export default withStyles(styles)(Main)
