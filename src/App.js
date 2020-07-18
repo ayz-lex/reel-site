@@ -10,6 +10,8 @@ import {BrowserRouter as Router, Switch, Route, useParams, Redirect} from 'react
 import {LoggedinContext} from './contexts/LoggedinContext'
 import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import BottomNavigation from '@material-ui/core/BottomNavigation'
 
 class App extends React.Component{
   constructor(props) {
@@ -254,30 +256,33 @@ class App extends React.Component{
     }
      
     return (
-      <div>
+      <React.Fragment>
+        <Box display="flex" flexDirection="row" justifyContent="Center">
+          <Typography variant="h2">
+            Reel
+          </Typography>
+        </Box>
         <LoggedinContext.Provider value={this.state}>
           <Router>
-            <div>
-              <NavigationBar />
-                {this.state.isLoggedIn ? (
-                <Switch>
-                  <Route path="/movie/:movie_id" component={MovieComp}/>
-                  <Route path="/profile" component={ProfileComp} />
-                  <Redirect from="/login" to="/" />
-                  <Redirect from="/signup" to="/" />
-                  <Route exact path="/" component={MainComp}/>
-                </Switch>
-                ) : (
-                <Switch>
-                  <Route path="/login" component={LoginComp} />
-                  <Route path="/signup" component={SignupComp} />
-                  <Route exact path="/" component={MainComp}/>
-                </Switch>
-                )}
-            </div>
+            <NavigationBar />
+              {this.state.isLoggedIn ? (
+              <Switch>
+                <Route path="/movie/:movie_id" component={MovieComp}/>
+                <Route path="/profile" component={ProfileComp} />
+                <Redirect from="/login" to="/" />
+                <Redirect from="/signup" to="/" />
+                <Route exact path="/" component={MainComp}/>
+              </Switch>
+              ) : (
+              <Switch>
+                <Route path="/login" component={LoginComp} />
+                <Route path="/signup" component={SignupComp} />
+                <Route exact path="/" component={MainComp}/>
+              </Switch>
+              )}
           </Router>
         </LoggedinContext.Provider>
-      </div>
+      </React.Fragment>
     )
   }
 }
