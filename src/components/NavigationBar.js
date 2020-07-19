@@ -1,5 +1,4 @@
 import React from 'react'
-import './NavigationBar.css'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Chip from '@material-ui/core/Chip'
 import {emphasize, withStyles, makeStyles } from '@material-ui/core/styles'
@@ -10,13 +9,11 @@ class NavigationBar extends React.Component {
 
   render() {
     return (
-      <div id="navigation_bar">
-        <LoggedinContext.Consumer>
-          {({isLoggedIn, toggleLoggedOut}) => (
-           <NavBar isLoggedIn={isLoggedIn} toggleLoggedOut={toggleLoggedOut} />
-          )}
-        </LoggedinContext.Consumer>
-      </div>
+      <LoggedinContext.Consumer>
+        {({isLoggedIn, toggleLoggedOut}) => (
+          <NavBar isLoggedIn={isLoggedIn} toggleLoggedOut={toggleLoggedOut} />
+        )}
+      </LoggedinContext.Consumer>
     )
   }
 }

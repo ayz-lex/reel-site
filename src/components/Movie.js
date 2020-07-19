@@ -5,13 +5,14 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography';
-
+import CardHeader from '@material-ui/core/CardHeader'
+import CardActions from '@material-ui/core/CardActions'
+import IconButton from '@material-ui/core/IconButton'
+import DoneIcon from '@material-ui/icons/Done'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
-  },
-  title: {
-    fontSize: 14,
+    maxWidth: 400,
   },
   media: {
     height: 0,
@@ -61,22 +62,12 @@ class Movie extends React.Component {
 
   render() {
     return this.state.fetching ? (
-      <div> fetching </div>
+      <div> Fetching </div>
     ) : (      
       this.state.found ? (
         <MovieCard {...this.state.movie}/>
-        /*
-        <div> 
-          <div id="movie">
-            <h1 id="title">
-              {this.state.movie.title}
-            </h1>
-            <button id="watched_button" onClick={this.watchedHandler}>Watched?</button>
-          </div>
-        </div>
-        */
       ) : (
-      <div> not found</div>
+      <Typography> Movie Not Found </Typography>
       )
     )
   }
@@ -84,29 +75,41 @@ class Movie extends React.Component {
 
 const MovieCard = (props) => {
   const classes = useStyles()
+
+  const getGenre = () => {
+    return props.genres.reduce((acc, cur) => {
+      if (acc === "") {
+        return cur.name
+      } else {
+        return `${acc} | ${cur.name} `
+      }
+    }, "")
+  }
+
   return (
     <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title} color = "textSecondary" gutterBottom>
-          {props.title}
-        </Typography>
-        <Typography variant="h5" component="h2">
-          movietitle
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          small text
-        </Typography>
-        <Typography variant="body2" component="p">
-          description
-          <br />
-          post break
-        </Typography>
-      </CardContent>
+      <CardHeader 
+        title={props.title}
+        subheader={`${getGenre()} – ${props.runtime} minutes`}
+      />
       <CardMedia 
         image={`https://image.tmdb.org/t/p/w400/${props.poster_path}`}
         title='image'
         className={classes.media}
       />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
+          {props.overview}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <IconButton aria-label="watched">
+          <DoneIcon />
+        </IconButton>
+        <IconButton aria-label="skip">
+          <NavigateNextIcon />
+        </IconButton>
+      </CardActions>
     </Card>
   )
 }
