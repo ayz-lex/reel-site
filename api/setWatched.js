@@ -20,7 +20,11 @@ router.post('/', authChecker, express.json(), async (req, res) => {
         username: username
       }
     }
-  )
+  ).catch(err => {
+    res.status(500).json({
+      error: 'Internal Error'
+    })
+  })
   
   res.sendStatus(200)
 })
