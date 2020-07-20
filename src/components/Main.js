@@ -106,7 +106,10 @@ class Main extends React.Component {
               </div>
             ) : (
               this.state.curMovie.map(movie => {
-                return <Movie movie_id={movie.id} />
+                return <Movie 
+                  movie_id={movie.id} 
+                  remover={this.remover}
+                />
               })
             )}
           </Container>
