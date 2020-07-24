@@ -82,31 +82,12 @@ const MovieCard = (props) => {
     }, "")
   }
 
-  const addToWatched = async e => {
+  const skipMovie = e => {
     e.preventDefault()
-    await fetch('http://localhost:8080/api/setWatched', {
-      method: 'POST',
-      withCredentials: 'true',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        id: props.movie.id,
-      })
-    }).then(res => {
-      if (res.status !== 200) {
-        const error = new Error(res.error)
-        throw error
-      }
-    }).catch(err => {
-      console.error(err)
-    })
     props.remover(props.movie.id)
   }
 
-  const skipMovie = e => {
+  const remove = e => {
     e.preventDefault()
     props.remover(props.movie.id)
   }
@@ -134,7 +115,7 @@ const MovieCard = (props) => {
               <Tooltip title="Add to Watched">
                 <IconButton 
                   aria-label="watched"
-                  onClick={addToWatched}
+                  onClick={remove}
                 >
                   <DoneIcon />
                 </IconButton>
@@ -151,14 +132,6 @@ const MovieCard = (props) => {
             )
           )}
         </LoggedinContext.Consumer>
-        <Tooltip title="Skip">
-          <IconButton 
-            aria-label="skip"
-            onClick={skipMovie}
-          >
-            <NavigateNextIcon />
-          </IconButton>
-        </Tooltip>
       </CardActions>
     </Card>
   )

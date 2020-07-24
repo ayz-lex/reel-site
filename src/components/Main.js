@@ -3,6 +3,7 @@ import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
 import Container from '@material-ui/core/Container'
 import {withStyles} from '@material-ui/core/styles'
+import {unmountComponentAtNode} from 'react-dom'
 
 
 const styles = {
@@ -22,46 +23,41 @@ class Main extends React.Component {
       fetching: true, 
       watched: [], 
       page: 1, 
-      curMovie: [],
+      curMovie: 0,
     }
   }
 
-  componentDidUpdate = () => {
-    this.fetchMovies()
-  }
+  fetchMovies = async (oldMovies, watched) => {
+    let newMovies = oldMovies
+    let numMovies = oldMovies.length
+    let page = this.state.page
 
-  fetchMovies = async () => {
-    //do error checking later
-    if (this.state.numMovies < 10) {
-      let numberOfAddedMovies = 0
-      let response = await fetch(`http://localhost:8080/api/recommendations/${this.state.page}`)
-      let data = await response.json()
-      //do this because watched array will be comparatively small
-      const watched = this.state.watched
-      let movies = data.filter(movie => {
+    while (numMovies < 10) {
+      const response = await fetch(`http://localhost:8080/api/recommendations/${page}`)
+      const data = await response.json()
+      const movies = data.filter(movie => {
         if (watched.find(watchedMovie => {
-          return watchedMovie.id === movie.id
+          return watchedMovie === movie
         }) === undefined) {
-          numberOfAddedMovies++
+          numMovies += 1
           return true
         }
         return false
       })
 
-      const newMovies = this.state.movies.concat(movies)
+      newMovies = newMovies.concat(movies)
+      page += 1
+    }
 
-      this.setState({
-        movies: newMovies, 
-        numMovies: this.state.numMovies + numberOfAddedMovies, 
-        page: this.state.page + 1, 
-        fetching: false,
-        curMovie: [newMovies[0]]
-      })
+    return {
+      movies: newMovies,
+      numMovies: numMovies,
+      page: page
     }
   }
 
-  fetchWatched = async () => {
-    let response = await fetch('http://localhost:8080/api/watched', {
+  loggedInFetch = async () => {
+    const response = await fetch('http://localhost:8080/api/watched', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -71,25 +67,79 @@ class Main extends React.Component {
       }
     })
     let data = await response.json()
-    this.setState({fetching: false, watched: data})
+    const promise = this.fetchMovies(this.state.movies, data)
+    promise.then(result => {
+      this.setState({
+        watched: data,
+        movies: result.movies,
+        numMovies: result.numMovies,
+        page: result.page,
+        fetching: false
+      })
+    })
+  }
+
+  loggedOutFetch = () => {
+    const result = this.fetchMovies(this.state.movies, [])
+    result.then(data => {
+      this.setState({
+        movies: data.movies,
+        numMovies: data.numMovies,
+        page: data.page,
+        fetching: false
+      })
+    })
   }
 
   getWatched = (isLoggedIn) => {
     if (isLoggedIn) {
-      this.fetchWatched()
+      this.loggedInFetch()
     } else {
-      this.setState({fetching: false})
+      this.loggedOutFetch()
     }
   }
 
-  remover = (id) => {
-    let newMovies = this.state.movies.filter(movie => {
-      return movie.id !== id
+  addToWatched = async id => {
+    await fetch('http://localhost:8080/api/setWatched', {
+      method: 'POST',
+      withCredentials: 'true',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        id: id,
+      })
+    }).then(res => {
+      if (res.status !== 200) {
+        const error = new Error(res.error)
+        throw error
+      }
+    }).catch(err => {
+      console.error(err)
     })
-    this.setState({
-      movies: newMovies, 
-      numMovies: --this.state.numMovies,
-      curMovie: [newMovies[0]],
+  }
+
+  remover = (id) => {
+
+    this.addToWatched(id)
+
+    const watched = this.state.watched.concat([id])
+
+    const newMovies = this.state.movies.filter(movie => {
+      return movie !== id
+    })
+
+    const data = this.fetchMovies(newMovies, watched)
+
+    data.then(result => {
+      this.setState({
+        watched: watched,
+        movies: result.movies, 
+        numMovies: result.numMovies,
+        page: result.page,
+      })
     })
   }
 
@@ -100,14 +150,13 @@ class Main extends React.Component {
         {({isLoggedIn}) => (
           <Container className={classes.root}>
             {this.state.fetching ? (
-              <div> 
-                fetching 
+              <div>  
                 {this.getWatched(isLoggedIn)}
               </div>
             ) : (
-              this.state.curMovie.map(movie => {
+              this.state.movies.map(movie => {
                 return <Movie 
-                  movie_id={movie.id} 
+                  movie_id={movie}
                   remover={this.remover}
                 />
               })
