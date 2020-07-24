@@ -20,7 +20,8 @@ class Main extends React.Component {
     this.state = {
       movies: [], 
       numMovies: 0, 
-      fetching: true, 
+      Initialfetching: true, 
+      fetching: false,
       watched: [], 
       page: 1, 
       curMovie: 0,
@@ -66,7 +67,7 @@ class Main extends React.Component {
         'Accept': 'application/json'
       }
     })
-    let data = await response.json()
+    const data = await response.json()
     const promise = this.fetchMovies(this.state.movies, data)
     promise.then(result => {
       this.setState({
@@ -74,7 +75,8 @@ class Main extends React.Component {
         movies: result.movies,
         numMovies: result.numMovies,
         page: result.page,
-        fetching: false
+        Initialfetching: false,
+        curMovie: result.movies[0],
       })
     })
   }
@@ -86,7 +88,9 @@ class Main extends React.Component {
         movies: data.movies,
         numMovies: data.numMovies,
         page: data.page,
-        fetching: false
+        fetching: false,
+        curMovie: data.movies[0],
+        Initialfetching: false,
       })
     })
   }
@@ -122,9 +126,6 @@ class Main extends React.Component {
   }
 
   remover = (id) => {
-
-    this.addToWatched(id)
-
     const watched = this.state.watched.concat([id])
 
     const newMovies = this.state.movies.filter(movie => {
@@ -139,8 +140,14 @@ class Main extends React.Component {
         movies: result.movies, 
         numMovies: result.numMovies,
         page: result.page,
+        curMovie: result.movies[0],
+        fetching: true,
       })
     })
+  }
+
+  refetch = () => {
+    this.setState({fetching: false})
   }
 
   render = () => {
@@ -149,17 +156,17 @@ class Main extends React.Component {
       <LoggedinContext.Consumer>
         {({isLoggedIn}) => (
           <Container className={classes.root}>
-            {this.state.fetching ? (
-              <div>  
-                {this.getWatched(isLoggedIn)}
-              </div>
+            {this.state.Initialfetching ? (
+              this.getWatched(isLoggedIn)
             ) : (
-              this.state.movies.map(movie => {
-                return <Movie 
-                  movie_id={movie}
+              this.state.fetching ? (
+                this.refetch()
+              ) : (
+                <Movie 
+                  movie_id={this.state.curMovie}
                   remover={this.remover}
                 />
-              })
+              )
             )}
           </Container>
         )}
