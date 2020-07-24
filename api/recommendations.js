@@ -16,6 +16,8 @@ router.get('/:page_number', async (req, res) => {
   })
   let movieArray = data.results.filter(movie => {
     return movie.popularity >= 29 & movie.vote_count >= 3000
+  }).map(movie => {
+    return movie.id
   })
   res.send(movieArray)
 })
