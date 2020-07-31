@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import './App.css';
 import Movie from './components/Movie.js'
 import Watched from './components/Watched.js'
 import Main from './components/Main.js'
 import TextField from '@material-ui/core/TextField'
 import NavigationBar from './components/NavigationBar.js'
 import Box from '@material-ui/core/Box'
-import {BrowserRouter as Router, Switch, Route, useParams, Redirect} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route, useParams, Redirect, Link} from 'react-router-dom'
 import {LoggedinContext} from './contexts/LoggedinContext'
 import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -257,13 +256,17 @@ class App extends React.Component{
      
     return (
       <React.Fragment>
-        <Box display="flex" flexDirection="row" justifyContent="Center">
-          <Typography variant="h2">
-            Reel
-          </Typography>
-        </Box>
         <LoggedinContext.Provider value={this.state}>
           <Router>
+            <Box display="flex" flexDirection="row" justifyContent="Center">
+              <Typography variant="h2">
+                <Link to="/" style={{ 
+                    textDecoration: 'none',
+                    color: '#a9cdeb',
+                  }}
+                >Reel</Link>
+              </Typography>
+            </Box>
             <NavigationBar />
               {this.state.isLoggedIn ? (
               <Switch>

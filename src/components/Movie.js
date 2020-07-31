@@ -54,7 +54,7 @@ class Movie extends React.Component {
 
   render() {
     return this.state.fetching ? (
-      <div> Fetching </div>
+      <React.Fragment></React.Fragment>
     ) : (      
       this.state.found ? (
         <MovieCard {...{
