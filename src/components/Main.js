@@ -126,6 +126,9 @@ class Main extends React.Component {
   }
 
   remover = (id) => {
+
+    this.addToWatched(id)
+    
     const watched = this.state.watched.concat([id])
 
     const newMovies = this.state.movies.filter(movie => {
