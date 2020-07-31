@@ -10,7 +10,7 @@ import {LoggedinContext} from './contexts/LoggedinContext'
 import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
-import BottomNavigation from '@material-ui/core/BottomNavigation'
+import logo from './logo.jpg'
 
 class App extends React.Component{
   constructor(props) {
@@ -259,13 +259,12 @@ class App extends React.Component{
         <LoggedinContext.Provider value={this.state}>
           <Router>
             <Box display="flex" flexDirection="row" justifyContent="Center">
-              <Typography variant="h2">
-                <Link to="/" style={{ 
-                    textDecoration: 'none',
-                    color: '#a9cdeb',
-                  }}
-                >Reel</Link>
-              </Typography>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                width="20%"
+                height="auto"
+              />
             </Box>
             <NavigationBar />
               {this.state.isLoggedIn ? (

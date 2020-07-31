@@ -16,10 +16,13 @@ import Tooltip from '@material-ui/core/Tooltip'
 const useStyles = makeStyles({
   root: {
     maxWidth: 400,
+    backgroundColor: '#f9f9f9',
   },
   media: {
-    height: 0,
-    paddingTop: '56.25%'
+    maxWidth: 400,
+    height: 'auto',
+    paddingBottom: '56.25%',
+    filter: 'grayscale(40%)'
   },
   pos: {
     marginBottom: 12,
@@ -96,7 +99,7 @@ const MovieCard = (props) => {
     <Card className={classes.root}>
       <CardHeader 
         title={props.movie.title}
-        subheader={`${getGenre()} – ${Math.floor(props.movie.runtime / 60)}:${props.movie.runtime % 60}`}
+        subheader={`${getGenre()} – ${Math.floor(props.movie.runtime / 60)}h ${props.movie.runtime % 60}min`}
       />
       <CardMedia 
         image={`https://image.tmdb.org/t/p/w400/${props.movie.poster_path}`}

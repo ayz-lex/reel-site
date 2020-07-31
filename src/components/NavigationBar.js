@@ -40,7 +40,8 @@ const NavBar = (props) => {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-      paddingTop: '10px'
+      marginTop: '15px',
+      marginBottom: '20px'
     }
   }))
   
