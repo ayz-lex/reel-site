@@ -1,9 +1,15 @@
 import React from 'react'
-import Breadcrumbs from '@material-ui/core/Breadcrumbs'
-import Chip from '@material-ui/core/Chip'
+
+/** MUI components */
+import {
+  Breadcrumbs,
+  Chip,
+  Box
+} from '@material-ui/core'
 import {emphasize, withStyles, makeStyles } from '@material-ui/core/styles'
+
+/** authentication context, acts as global state */
 import {LoggedinContext} from '../contexts/LoggedinContext'
-import Box from '@material-ui/core/Box'
 
 class NavigationBar extends React.Component {
 

@@ -1,17 +1,24 @@
 import React from 'react'
-//import './Movie.css'
+
+/** MUI components */
+import {
+  Card, 
+  CardContent,
+  CardMedia,
+  Typography,
+  CardHeader,
+  CardActions,
+  IconButton,
+  Tooltip
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia'
-import Typography from '@material-ui/core/Typography';
-import CardHeader from '@material-ui/core/CardHeader'
-import CardActions from '@material-ui/core/CardActions'
-import IconButton from '@material-ui/core/IconButton'
+
+/** MUI icons */
 import DoneIcon from '@material-ui/icons/Done'
 import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+
+/** authentication context, acts as global state */
 import {LoggedinContext} from '../contexts/LoggedinContext.js'
-import Tooltip from '@material-ui/core/Tooltip'
 
 const useStyles = makeStyles({
   root: {

@@ -1,16 +1,35 @@
 import React, {useState} from 'react';
+
+/** website logo */
+import logo from './logo.jpg'
+
+/** custom components */
 import Movie from './components/Movie.js'
 import Watched from './components/Watched.js'
 import Main from './components/Main.js'
-import TextField from '@material-ui/core/TextField'
 import NavigationBar from './components/NavigationBar.js'
-import Box from '@material-ui/core/Box'
-import {BrowserRouter as Router, Switch, Route, useParams, Redirect, Link} from 'react-router-dom'
+
+/** authentication context, acts as global state */
 import {LoggedinContext} from './contexts/LoggedinContext'
+
+/** MUI components */
+import {
+  TextField,
+  Box,
+  Button,
+  Typography,
+} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import logo from './logo.jpg'
+
+/** react-router components */
+import {
+  BrowserRouter as Router, 
+  Switch, 
+  Route, 
+  useParams, 
+  Redirect, 
+  Link
+} from 'react-router-dom'
 
 class App extends React.Component{
   constructor(props) {
@@ -60,25 +79,21 @@ class App extends React.Component{
   render() {
 
     const MainComp = () => {
-      return <div>
+      return (
         <Main />
-      </div>
+      )
     }
 
     const MovieComp = () => {
       let {movie_id} = useParams()
       return (
-        <div>
-          <Movie movie_id={movie_id} />
-        </div>
+        <Movie movie_id={movie_id} />
       )
     }
 
     const ProfileComp = () => {
       return (
-        <div>
-          <Watched />
-        </div>
+        <Watched />
       )     
     }
 
@@ -262,7 +277,7 @@ class App extends React.Component{
               <img 
                 src={logo} 
                 alt="Logo" 
-                width="20%"
+                width="10%"
                 height="auto"
               />
             </Box>

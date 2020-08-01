@@ -3,7 +3,6 @@ import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
 import Container from '@material-ui/core/Container'
 import {withStyles} from '@material-ui/core/styles'
-import {unmountComponentAtNode} from 'react-dom'
 
 
 const styles = {
@@ -128,7 +127,7 @@ class Main extends React.Component {
   remover = (id) => {
 
     this.addToWatched(id)
-    
+
     const watched = this.state.watched.concat([id])
 
     const newMovies = this.state.movies.filter(movie => {
