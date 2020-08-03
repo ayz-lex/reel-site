@@ -4,6 +4,7 @@ const User = require('../../databases/models/users')
 const Movie = require('../../databases/models/movies')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 router.post('/', express.json(), async (req, res) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
@@ -38,7 +39,7 @@ router.post('/', express.json(), async (req, res) => {
 
     const payload = {username: user.username}
 
-    const token = jwt.sign(payload, 'secret', {
+    const token = jwt.sign(payload, process.env.JWTSECRET, {
       expiresIn: '1h'
     })
     res.cookie('token', token, {
@@ -48,7 +49,7 @@ router.post('/', express.json(), async (req, res) => {
 
   } else {
     res.status(401).json({
-      error: 'Username Taken'
+      error: 'Username already exists'
     })
   }
 })

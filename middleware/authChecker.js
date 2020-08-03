@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken')
-const secret = 'secret'
+require('dotenv').config()
 
 const checkAuth = (req, res, next) => {
   const token = req.cookies.token
   if (!token) {
     res.status(401).json({
-      error: 'Unauthorized: no token'
+      error: 'Unauthorized: token expired'
     })
   } else {
-    jwt.verify(token, secret, (err, decoded) => {
+    jwt.verify(token, process.env.JWTSECRET, (err, decoded) => {
       if (err) {
         res.status(401).json({
           error: 'Unauthorized: token invalid'
