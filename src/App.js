@@ -17,6 +17,7 @@ import {
   TextField,
   Box,
   Button,
+  Typography
 } from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 
@@ -266,6 +267,30 @@ class App extends React.Component{
         </React.Fragment>
       )
     }
+
+    const Comp404 = () => {
+
+      const useStyles = makeStyles((theme) => ({
+        root: {
+          textAlign: 'center',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          fontSize: '30px',
+          color: 'black',
+          fontWeight: 'bold',
+        }
+      }))
+
+      const classes = useStyles()
+
+      return (
+        <Typography className={classes.root} variant='h7'>
+          404 Page Not Found
+        </Typography>
+      )
+    }
      
     return (
       <React.Fragment>
@@ -287,12 +312,14 @@ class App extends React.Component{
                 <Redirect from="/login" to="/" />
                 <Redirect from="/signup" to="/" />
                 <Route exact path="/" component={MainComp}/>
+                <Route path="/" component={Comp404} />
               </Switch>
               ) : (
               <Switch>
                 <Route path="/login" component={LoginComp} />
                 <Route path="/signup" component={SignupComp} />
                 <Route exact path="/" component={MainComp}/>
+                <Route path="/" component={Comp404} />
               </Switch>
               )}
           </Router>
