@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 /** website logo */
 import logo from './logo.jpg'
@@ -17,8 +17,9 @@ import {
   TextField,
   Box,
   Button,
-  Typography
+  Typography,
 } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 import {makeStyles} from '@material-ui/core/styles'
 
 /** react-router components */
@@ -99,6 +100,7 @@ class App extends React.Component{
     const useStyles = makeStyles((theme) => ({
       root: {
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
       },
@@ -118,6 +120,8 @@ class App extends React.Component{
     
       const [username, setUsername] = useState('')
       const [password, setPassword] = useState('')
+      
+      const [error, setError] = useState(false)
     
       const usernameChangeHandler = e => {
         setUsername(e.target.value)
@@ -128,7 +132,6 @@ class App extends React.Component{
     
       const loginSubmitHandler = async e => {
         e.preventDefault()
-    
         await fetch('http://localhost:8080/api/login', {
           method: 'POST',
           withCredentials: 'true',
@@ -143,7 +146,6 @@ class App extends React.Component{
           })
         }).then(res => {
           if (res.status === 200) {
-            alert('Login Succeeded')
             toggleLoggedIn()
           } else {
             const error = new Error(res.error)
@@ -151,8 +153,7 @@ class App extends React.Component{
           }
         }).catch(err => {
           console.error(err)
-          alert('Error logging in')
-          toggleLoggedOut()
+          setError(true)
         })
       }
 
@@ -161,6 +162,17 @@ class App extends React.Component{
       return (  
         <React.Fragment>
           <Box className={classes.root}>
+            {error ? (
+              <Alert 
+                onClose={() => {setError(false)}}
+                variant="outlined" 
+                severity="error"
+              >
+                Incorrect username/password
+              </Alert>
+            ) : (
+              <React.Fragment></React.Fragment>
+            )}
             <form className={classes.form}>
               <div>
                 <TextField
@@ -198,6 +210,8 @@ class App extends React.Component{
       const [username, setUsername] = useState('')
       const [password, setPassword] = useState('')
 
+      const [error, setError] = useState(false)
+
       const usernameChangeHandler = e => {
         setUsername(e.target.value)
       }
@@ -221,15 +235,14 @@ class App extends React.Component{
           })
         }).then(res => {
           if (res.status === 200) {
-            alert('Register Succeeded')
             toggleLoggedIn()
           } else {
             const error = new Error(res.error)
             throw error
           }
         }).catch(err => {
-          alert('Register Failed')
-          toggleLoggedOut()
+          console.error(err)
+          setError(true)
         })
       }
 
@@ -238,6 +251,17 @@ class App extends React.Component{
       return (
         <React.Fragment>
           <Box className={classes.root}>
+            {error ? (
+              <Alert 
+                onClose={() => {setError(false)}}
+                variant="outlined" 
+                severity="error"
+              >
+                Incorrect username/password
+              </Alert>
+            ) : (
+              <React.Fragment></React.Fragment>
+            )}
             <form className={classes.form} >
               <div>
                 <TextField
