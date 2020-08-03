@@ -1,18 +1,20 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, {useState} from 'react'
+import {
+  GridList,
+  GridListTile
+} from "@material-ui/core";
 
-class Watched extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {movieArray: [], found: false, fetching: true}
-  }
+import {makeStyles} from '@material-ui/core/styles'
 
-  componentDidMount () {
-    this.fetchSearch()
-  }
 
-  fetchSearch = async () => {
-    let response = await fetch('http://localhost:8080/api/watched/', {
+
+function Watched() {
+
+  const [movieArray, setMovieArray] = useState([])
+  const [fetching, setFetching] = useState(true)
+
+  const fetchSearch = async () => {
+    const response = await fetch('http://localhost:8080/api/watched', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -21,44 +23,55 @@ class Watched extends React.Component {
         'Accept': 'application/json'
       },
     })
-    if (response.status === 200) {
-      let data = await response.json()
-      this.setState({movieArray: data, found: true, fetching: false})
-    } else {
-      this.setState({fetching: false})
-    }
+    const data = await response.json()
+
+    const movieList = await Promise.all(data.map(async movie => {
+      const response = await fetch(`http://localhost:8080/api/movie/${movie}`)
+
+      const movieData = await response.json()
+
+      return {
+        img: `https://image.tmdb.org/t/p/w400/${movieData.poster_path}`,
+        title: movieData.title
+      }
+    }))
+
+    setMovieArray(movieList)
+    setFetching(false)
   }
 
-  render = () => {
-    return (
-      this.state.fetching ? (
-        <div> 
-          fetching 
-        </div>
-      ) : (
-        this.state.found ? (
-          <div>
-            {this.state.movieArray.map(movie => {
-              return <MovieBox {...movie} />
-            })} 
-          </div>
-        ) : (
-        <div> not found</div>
-        )
-      )
-    )
-  }
-}
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      overflow: 'hidden',
+      backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+      width: 500,
+      height: 450,
+    },
+  }));
 
-const MovieBox = (props) => {
-  const title = props.title
-  const id = props.id
+  const classes = useStyles()
+    
   return (
-    <div>
-      {title}
-      <Link to={`/movie/${id}`} > link to {title} </Link>
-    </div>
+    fetching ? (
+      <React.Fragment>{fetchSearch()}</React.Fragment>
+    ) : (
+      <div>
+        <GridList cellHeight={160} className={classes.gridList} cols={3}>
+          {movieArray.map((tile) => (
+            <GridListTile key={tile.img} cols={tile.cols || 1}>
+              <img src={tile.img} alt={tile.title} />
+            </GridListTile>
+          ))}
+        </GridList>
+      </div>
+    )
   )
 }
+
 
 export default Watched

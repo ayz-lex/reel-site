@@ -17,7 +17,6 @@ import {
   TextField,
   Box,
   Button,
-  Typography,
 } from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 
@@ -27,8 +26,7 @@ import {
   Switch, 
   Route, 
   useParams, 
-  Redirect, 
-  Link
+  Redirect
 } from 'react-router-dom'
 
 class App extends React.Component{
@@ -271,16 +269,16 @@ class App extends React.Component{
      
     return (
       <React.Fragment>
+        <Box display="flex" flexDirection="row" justifyContent="Center">
+          <img 
+            src={logo} 
+            alt="Logo" 
+            width="10%"
+            height="auto"
+          />
+        </Box>
         <LoggedinContext.Provider value={this.state}>
           <Router>
-            <Box display="flex" flexDirection="row" justifyContent="Center">
-              <img 
-                src={logo} 
-                alt="Logo" 
-                width="10%"
-                height="auto"
-              />
-            </Box>
             <NavigationBar />
               {this.state.isLoggedIn ? (
               <Switch>

@@ -92,11 +92,6 @@ const MovieCard = (props) => {
     }, "")
   }
 
-  const skipMovie = e => {
-    e.preventDefault()
-    props.remover(props.movie.id)
-  }
-
   const remove = e => {
     e.preventDefault()
     props.remover(props.movie.id)
@@ -131,12 +126,12 @@ const MovieCard = (props) => {
                 </IconButton>
               </Tooltip>
             ) : (
-              <Tooltip title="Login for Functionality">
+              <Tooltip title="Skip">
                 <IconButton 
                   aria-label="watched"
-                  onClick={skipMovie}
+                  onClick={remove}
                 >
-                  <DoneIcon />
+                  <NavigateNextIcon />
                 </IconButton>
               </Tooltip>
             )

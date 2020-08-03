@@ -148,6 +148,25 @@ class Main extends React.Component {
     })
   }
 
+  removerLogout = (id) => {
+    const newMovies = this.state.movies.filter(movie => {
+      return movie !== id
+    })
+
+    const data = this.fetchMovies(newMovies, [])
+
+    data.then(result => {
+      this.setState({
+        movies: result.movies, 
+        numMovies: result.numMovies,
+        page: result.page,
+        curMovie: result.movies[0],
+        fetching: true,
+      })
+    })
+
+  }
+
   refetch = () => {
     this.setState({fetching: false})
   }
@@ -164,10 +183,17 @@ class Main extends React.Component {
               this.state.fetching ? (
                 this.refetch()
               ) : (
-                <Movie 
-                  movie_id={this.state.curMovie}
-                  remover={this.remover}
-                />
+                isLoggedIn ? (
+                  <Movie 
+                    movie_id={this.state.curMovie}
+                    remover={this.remover}
+                  />
+                ) : (
+                  <Movie
+                    movie_id={this.state.curMovie}
+                    remover={this.removerLogout}
+                  />
+                )
               )
             )}
           </Container>
