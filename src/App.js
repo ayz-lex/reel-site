@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 
 /** website logo */
 import logo from './logo.jpg'
@@ -122,6 +122,7 @@ class App extends React.Component{
       const [password, setPassword] = useState('')
       
       const [error, setError] = useState(false)
+      const [errorStatement, setErrorStatement] = useState('')
     
       const usernameChangeHandler = e => {
         setUsername(e.target.value)
@@ -130,9 +131,9 @@ class App extends React.Component{
         setPassword(e.target.value)
       }
     
-      const loginSubmitHandler = async e => {
+      const loginSubmitHandler = e => {
         e.preventDefault()
-        await fetch('http://localhost:8080/api/login', {
+        fetch('http://localhost:8080/api/login', {
           method: 'POST',
           withCredentials: 'true',
           credentials: 'include',
@@ -148,12 +149,15 @@ class App extends React.Component{
           if (res.status === 200) {
             toggleLoggedIn()
           } else {
-            const error = new Error(res.error)
-            throw error
+            return res.json()
           }
+        }).then(jsonObj => {
+          const error = new Error(jsonObj.error)
+          throw error
         }).catch(err => {
-          console.error(err)
           setError(true)
+          setErrorStatement(err.message)
+          console.error(err)
         })
       }
 
@@ -168,7 +172,7 @@ class App extends React.Component{
                 variant="outlined" 
                 severity="error"
               >
-                Incorrect username/password
+                {errorStatement}
               </Alert>
             ) : (
               <React.Fragment></React.Fragment>
@@ -211,6 +215,7 @@ class App extends React.Component{
       const [password, setPassword] = useState('')
 
       const [error, setError] = useState(false)
+      const [errorMessage, setErrorMessage] = useState('')
 
       const usernameChangeHandler = e => {
         setUsername(e.target.value)
@@ -219,9 +224,9 @@ class App extends React.Component{
         setPassword(e.target.value)
       }
 
-      const registerSubmitHandler = async e => {
+      const registerSubmitHandler = e => {
         e.preventDefault()
-        await fetch('http://localhost:8080/api/register', {
+        fetch('http://localhost:8080/api/register', {
           method: 'POST',
           withCredentials: 'true',
           credentials: 'include',
@@ -237,12 +242,15 @@ class App extends React.Component{
           if (res.status === 200) {
             toggleLoggedIn()
           } else {
-            const error = new Error(res.error)
-            throw error
+            return res.json()
           }
+        }).then(jsonObj => {
+          const error = new Error(jsonObj.error)
+          throw error
         }).catch(err => {
           console.error(err)
           setError(true)
+          setErrorMessage(err.message)
         })
       }
 
@@ -257,7 +265,7 @@ class App extends React.Component{
                 variant="outlined" 
                 severity="error"
               >
-                Incorrect username/password
+                {errorMessage}
               </Alert>
             ) : (
               <React.Fragment></React.Fragment>
