@@ -16,7 +16,7 @@ function Watched() {
 
   const fetchSearch = async () => {
     if (fetching) {
-      const response = await fetch('http://localhost:8080/api/watched', {
+      const response = await fetch('http://localhost:8080/api/getWatchedData', {
         method: 'GET',
         withCredentials: 'true',
         credentials: 'include',
@@ -27,25 +27,13 @@ function Watched() {
       })
       const data = await response.json()
 
-      const movieList = await Promise.all(data.map(async movie => {
-        const response = await fetch(`http://localhost:8080/api/movie/${movie}`)
-
-        const movieData = await response.json()
-
-        return {
-          img: `https://image.tmdb.org/t/p/w400/${movieData.poster_path}`,
-          title: movieData.title
-        }
-      }))
-      setMovieArray(movieList)
+      setMovieArray(data)
       setFetching(false)
     }
   }
 
   useEffect(() => {
-    fetchSearch().then(result => {
-      return result
-    })
+    fetchSearch().then()
   })
 
   const useStyles = makeStyles((theme) => ({
