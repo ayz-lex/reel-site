@@ -10,7 +10,6 @@ router.post('/', authChecker, express.json(), async (req, res) => {
   const decoded = jwt.decode(token)
   const username = decoded.username
 
-  //any better way of doing this?
   await User.update(
     {
       watched: sequelize.fn('array_append', sequelize.col('watched'), req.body.id)

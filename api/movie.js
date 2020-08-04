@@ -14,7 +14,6 @@ router.get('/:movie_id', async (req, res) => {
     })
   })
   if (data.status_code === 34) {
-    console.log('here')
     res.status(404).json({
       error: data.status_message
     })
