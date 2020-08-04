@@ -37,14 +37,15 @@ function Watched() {
           title: movieData.title
         }
       }))
-
       setMovieArray(movieList)
       setFetching(false)
     }
   }
 
   useEffect(() => {
-    fetchSearch()
+    fetchSearch().then(result => {
+      return result
+    })
   })
 
   const useStyles = makeStyles((theme) => ({

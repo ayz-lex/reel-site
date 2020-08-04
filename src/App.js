@@ -50,8 +50,8 @@ class App extends React.Component{
     }
   }
 
-  checkSession = async () => {
-    await fetch('http://localhost:8080/api/checkLogin', {
+  checkSession = () => {
+    fetch('http://localhost:8080/api/checkLogin', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -94,7 +94,7 @@ class App extends React.Component{
     const ProfileComp = () => {
       return (
         <Watched />
-      )     
+      )
     }
 
     const useStyles = makeStyles((theme) => ({
@@ -337,23 +337,20 @@ class App extends React.Component{
         <LoggedinContext.Provider value={this.state}>
           <Router>
             <NavigationBar />
-              {this.state.isLoggedIn ? (
               <Switch>
                 <Route path="/movie/:movie_id" component={MovieComp}/>
-                <Route path="/profile" component={ProfileComp} />
-                <Redirect from="/login" to="/" />
-                <Redirect from="/signup" to="/" />
+                <Route path="/profile">
+                  {!this.state.isLoggedIn ? <ProfileComp /> : <Redirect to="/" />}
+                </Route>
+                <Route path="/login">
+                  {this.state.isLoggedIn ? <Redirect to="/" /> : <LoginComp />}
+                </Route> 
+                <Route path="/signup">
+                  {this.state.isLoggedIn ? <Redirect to="/" /> : <SignupComp />}
+                </Route>
                 <Route exact path="/" component={MainComp}/>
                 <Route path="/" component={Comp404} />
               </Switch>
-              ) : (
-              <Switch>
-                <Route path="/login" component={LoginComp} />
-                <Route path="/signup" component={SignupComp} />
-                <Route exact path="/" component={MainComp}/>
-                <Route path="/" component={Comp404} />
-              </Switch>
-              )}
           </Router>
         </LoggedinContext.Provider>
       </React.Fragment>
