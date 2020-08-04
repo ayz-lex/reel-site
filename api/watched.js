@@ -24,26 +24,7 @@ router.get('/', authChecker, async (req, res) => {
     })
   }
 
-  const watchedList = user.watched
-
-  
-  const watchedData = await Promise.all(watchedList.map(async movie_id => {
-    let response = await fetch(`https://api.themoviedb.org/3/movie/${movie_id}?api_key=${process.env.API_KEY}`).catch(err => {
-      res.status(500).json({
-        error: 'Internal Error'
-      })
-    })
-
-    let data = await response.json().catch(err => {
-      res.status(500).json({
-        error: 'Internal Error'
-      })
-    })
-    return data.id
-  }))
-  
-
-  res.send(watchedData)
+  res.send(user.watched)
 })
 
 module.exports = router
