@@ -235,32 +235,38 @@ const SignupComp = (props) => {
 
   const registerSubmitHandler = e => {
     e.preventDefault()
-    fetch('http://localhost:8080/api/register', {
-      method: 'POST',
-      withCredentials: 'true',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username, 
-        password: password
-      })
-    }).then(res => {
-      if (res.status === 200) {
-        toggleLoggedIn()
-      } else {
-        return res.json()
-      }
-    }).then(jsonObj => {
-      const error = new Error(jsonObj.error)
-      throw error
-    }).catch(err => {
-      console.error(err)
+
+    if (username.length() >= 255) {
       setError(true)
-      setErrorMessage(err.message)
-    })
+      setErrorMessage('Username is too long')
+    } else {
+      fetch('http://localhost:8080/api/register', {
+        method: 'POST',
+        withCredentials: 'true',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username, 
+          password: password
+        })
+      }).then(res => {
+        if (res.status === 200) {
+          toggleLoggedIn()
+        } else {
+          return res.json()
+        }
+      }).then(jsonObj => {
+        const error = new Error(jsonObj.error)
+        throw error
+      }).catch(err => {
+        console.error(err)
+        setError(true)
+        setErrorMessage(err.message)
+      })
+    }
   }
 
   const useStyles = makeStyles((theme) => ({
