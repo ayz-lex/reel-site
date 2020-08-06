@@ -9,6 +9,8 @@ import {
 
 import {makeStyles} from '@material-ui/core/styles'
 
+require('dotenv').config()
+
 function Watched() {
 
   const [movieArray, setMovieArray] = useState([])
@@ -16,7 +18,7 @@ function Watched() {
 
   const fetchSearch = async () => {
     if (fetching) {
-      const response = await fetch('http://localhost:8080/api/getWatchedData', {
+      const response = await fetch(`${process.env.HOST}:8080/api/getWatchedData`, {
         method: 'GET',
         withCredentials: 'true',
         credentials: 'include',

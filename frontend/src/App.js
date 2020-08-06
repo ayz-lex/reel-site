@@ -29,6 +29,8 @@ import {
   Redirect
 } from 'react-router-dom'
 
+require('dotenv').config()
+
 class App extends React.Component{
   constructor(props) {
     super(props)
@@ -49,7 +51,7 @@ class App extends React.Component{
   }
 
   checkSession = () => {
-    fetch('http://localhost:8080/api/checkLogin', {
+    fetch(`${process.env.HOST}:8080/api/checkLogin`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -127,7 +129,7 @@ const LoginComp = (props) => {
 
   const loginSubmitHandler = e => {
     e.preventDefault()
-    fetch('http://localhost:8080/api/login', {
+    fetch(`${process.env.HOST}:8080/api/login`, {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
@@ -236,11 +238,11 @@ const SignupComp = (props) => {
   const registerSubmitHandler = e => {
     e.preventDefault()
 
-    if (username.length() >= 255) {
+    if (username.length >= 255) {
       setError(true)
       setErrorMessage('Username is too long')
     } else {
-      fetch('http://localhost:8080/api/register', {
+      fetch(`${process.env.HOST}:8080/api/register`, {
         method: 'POST',
         withCredentials: 'true',
         credentials: 'include',

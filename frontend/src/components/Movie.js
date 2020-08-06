@@ -20,6 +20,8 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext'
 /** authentication context, acts as global state */
 import {LoggedinContext} from '../contexts/LoggedinContext.js'
 
+require('dotenv').require()
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 400,
@@ -53,7 +55,7 @@ class Movie extends React.Component {
   }
 
   fetchMovie = async () => {
-    let response = await fetch(`http://localhost:8080/api/movie/${this.state.id}`)
+    let response = await fetch(`${process.env.HOST}:8080/api/movie/${this.state.id}`)
     if (response.status === 200) {
       let data = await response.json()
       this.setState({movie: data, found: true, fetching: false})

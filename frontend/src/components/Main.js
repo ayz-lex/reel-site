@@ -3,7 +3,7 @@ import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
 import Container from '@material-ui/core/Container'
 import {withStyles} from '@material-ui/core/styles'
-
+require('dotenv').config()
 
 const styles = {
   root: {
@@ -33,7 +33,7 @@ class Main extends React.Component {
     let page = this.state.page
 
     while (numMovies < 10) {
-      const response = await fetch(`http://localhost:8080/api/recommendations/${page}`)
+      const response = await fetch(`${process.env.HOST}:8080/api/recommendations/${page}`)
       const data = await response.json()
       const movies = data.filter(movie => {
         if (watched.find(watchedMovie => {
@@ -57,7 +57,7 @@ class Main extends React.Component {
   }
 
   loggedInFetch = async () => {
-    const response = await fetch('http://localhost:8080/api/watched', {
+    const response = await fetch(`${process.env.HOST}:8080/api/watched`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -103,7 +103,7 @@ class Main extends React.Component {
   }
 
   addToWatched = async id => {
-    await fetch('http://localhost:8080/api/setWatched', {
+    await fetch(`${process.env.HOST}:8080/api/setWatched`, {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
