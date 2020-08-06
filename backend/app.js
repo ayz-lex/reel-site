@@ -3,7 +3,7 @@ const app = express()
 const PORT = 8080
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-require('./api/node_modules/dotenv').config()
+require('dotenv').config()
 
 //let frontend connect with backend apis
 app.use(cors({

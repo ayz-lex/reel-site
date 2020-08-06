@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../../databases/models/users')
-const Movie = require('../../databases/models/movies')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
@@ -12,6 +11,8 @@ router.post('/', express.json(), async (req, res) => {
       error: 'Internal Error'
     })
   })
+
+  console.log(user)
 
   if (user === null) {
     const {
