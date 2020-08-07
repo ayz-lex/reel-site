@@ -63,13 +63,13 @@ const NavBar = (props) => {
             component="a"
             href="/"
             label="Home"
-            onClick
+            onClick={()=>{}}
           />
           <StyledBreadcrumb 
             component="a"
             href="/profile"
             label="Profile"
-            onClick
+            onClick={()=>{}}
           />
           <LogoutButton toggleLoggedOut={props.toggleLoggedOut} />
         </Breadcrumbs>
@@ -80,19 +80,19 @@ const NavBar = (props) => {
           component="a"
           href="/"
           label="Home"
-          onClick
+          onClick={()=>{}}
         />
         <StyledBreadcrumb 
           component="a"
           href="/login"
           label="Login"
-          onClick
+          onClick={()=>{}}
         />
         <StyledBreadcrumb 
           component="a"
           href="/signup"
           label="Signup"
-          onClick
+          onClick={()=>{}}
         />
       </Breadcrumbs>
     )

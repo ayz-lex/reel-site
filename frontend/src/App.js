@@ -36,11 +36,17 @@ class App extends React.Component{
     super(props)
 
     this.toggleLoggedIn = () => {
-      this.setState({isLoggedIn: true})
+      this.setState({
+        isLoggedIn: true,
+        fetching: true,
+      })
     }    
 
     this.toggleLoggedOut = () => {
-      this.setState({isLoggedIn: false})
+      this.setState({
+        isLoggedIn: false,
+        fetching: true,
+      })
     }
 
     this.state = {
@@ -67,26 +73,18 @@ class App extends React.Component{
           fetching: false,
         })
       } else {
-        const error = new Error(res.error)
-        throw error
+        this.setState({
+          isLoggedIn: false,
+          fetching: false,
+        })
       }
-    }).catch(err => {
-      console.error(err)
-      this.setState({
-        isLoggedIn: false,
-        fetching: false,
-      })
     })
-  }
-
-  componentDidMount() {
-    this.checkSession()
   }
 
   render() {
     return (
       this.state.fetching ? (
-        <React.Fragment></React.Fragment>
+        <React.Fragment>{this.checkSession()}</React.Fragment>
       ) : (
         <React.Fragment>
           <Box display="flex" flexDirection="row" justifyContent="Center">
