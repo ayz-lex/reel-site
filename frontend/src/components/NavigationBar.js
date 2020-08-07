@@ -11,7 +11,7 @@ import {emphasize, withStyles, makeStyles } from '@material-ui/core/styles'
 /** authentication context, acts as global state */
 import {LoggedinContext} from '../contexts/LoggedinContext'
 
-require('dotenv').config()
+require('dotenv').config({path: '../../.env'})
 
 class NavigationBar extends React.Component {
 
@@ -105,7 +105,7 @@ const LogoutButton = (props) => {
 
   const logoutHandler = async e => {
     e.preventDefault()
-    await fetch(`${process.env.HOST}:8080/api/logout`, {
+    await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/logout`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',

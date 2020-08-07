@@ -3,7 +3,8 @@ const router = express.Router()
 const User = require('../../databases/models/users')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-require('dotenv').config()
+
+require('dotenv').config({path: '../../.env'})
 
 router.post('/', express.json(), async (req, res) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
@@ -12,7 +13,6 @@ router.post('/', express.json(), async (req, res) => {
     })
   })
 
-  console.log(user)
 
   if (user === null) {
     const {

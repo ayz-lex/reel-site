@@ -1,10 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const fetch = require('node-fetch')
 const User = require('../databases/models/users')
 const jwt = require('jsonwebtoken')
 const authChecker = require('../middleware/authChecker')
-require('dotenv').config()
 
 router.get('/', authChecker, async (req, res) => {
 

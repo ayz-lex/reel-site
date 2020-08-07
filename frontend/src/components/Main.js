@@ -3,7 +3,8 @@ import {LoggedinContext} from '../contexts/LoggedinContext.js'
 import Movie from './Movie'
 import Container from '@material-ui/core/Container'
 import {withStyles} from '@material-ui/core/styles'
-require('dotenv').config()
+
+require('dotenv').config({path: '../../.env'})
 
 const styles = {
   root: {
@@ -33,7 +34,7 @@ class Main extends React.Component {
     let page = this.state.page
 
     while (numMovies < 10) {
-      const response = await fetch(`${process.env.HOST}:8080/api/recommendations/${page}`)
+      const response = await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/recommendations/${page}`)
       const data = await response.json()
       const movies = data.filter(movie => {
         if (watched.find(watchedMovie => {
@@ -57,7 +58,7 @@ class Main extends React.Component {
   }
 
   loggedInFetch = async () => {
-    const response = await fetch(`${process.env.HOST}:8080/api/watched`, {
+    const response = await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/watched`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -67,30 +68,28 @@ class Main extends React.Component {
       }
     })
     const data = await response.json()
-    const promise = this.fetchMovies(this.state.movies, data)
-    promise.then(result => {
-      this.setState({
-        watched: data,
-        movies: result.movies,
-        numMovies: result.numMovies,
-        page: result.page,
-        Initialfetching: false,
-        curMovie: result.movies[0],
-      })
+
+    const fetched = await this.fetchMovies(this.state.movies, data)
+
+    this.setState({
+      watched: data,
+      movies: fetched.movies,
+      numMovies: fetched.numMovies,
+      page: fetched.page,
+      Initialfetching: false,
+      curMovie: fetched.movies[0]
     })
   }
 
-  loggedOutFetch = () => {
-    const result = this.fetchMovies(this.state.movies, [])
-    result.then(data => {
-      this.setState({
-        movies: data.movies,
-        numMovies: data.numMovies,
-        page: data.page,
-        fetching: false,
-        curMovie: data.movies[0],
-        Initialfetching: false,
-      })
+  loggedOutFetch = async () => {
+    const fetched = await this.fetchMovies(this.state.movies, [])
+    this.setState({
+      movies: fetched.movies,
+      numMovies: fetched.numMovies,
+      page: fetched.page,
+      fetching: false,
+      curMovie: fetched.movies[0],
+      Initialfetching: false,
     })
   }
 
@@ -103,7 +102,7 @@ class Main extends React.Component {
   }
 
   addToWatched = async id => {
-    await fetch(`${process.env.HOST}:8080/api/setWatched`, {
+    await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/setWatched`, {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',

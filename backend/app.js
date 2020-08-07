@@ -7,8 +7,8 @@ require('dotenv').config()
 
 //let frontend connect with backend apis
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
+  origin: true,
+  credentials: true,
 }))
 
 app.use(cookieParser())

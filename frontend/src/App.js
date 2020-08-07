@@ -29,7 +29,7 @@ import {
   Redirect
 } from 'react-router-dom'
 
-require('dotenv').config()
+require('dotenv').config({path: '../.env'})
 
 class App extends React.Component{
   constructor(props) {
@@ -46,12 +46,13 @@ class App extends React.Component{
     this.state = {
       isLoggedIn: false,
       toggleLoggedIn: this.toggleLoggedIn,
-      toggleLoggedOut: this.toggleLoggedOut
+      toggleLoggedOut: this.toggleLoggedOut,
+      fetching: true,
     }
   }
 
   checkSession = () => {
-    fetch(`${process.env.HOST}:8080/api/checkLogin`, {
+    fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/checkLogin`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -61,14 +62,20 @@ class App extends React.Component{
       },
     }).then(res => {
       if (res.status === 200) {
-        this.setState({isLoggedIn: true})
+        this.setState({
+          isLoggedIn: true,
+          fetching: false,
+        })
       } else {
         const error = new Error(res.error)
         throw error
       }
     }).catch(err => {
       console.error(err)
-      this.setState({isLoggedIn: false})
+      this.setState({
+        isLoggedIn: false,
+        fetching: false,
+      })
     })
   }
 
@@ -77,36 +84,39 @@ class App extends React.Component{
   }
 
   render() {
-     
     return (
-      <React.Fragment>
-        <Box display="flex" flexDirection="row" justifyContent="Center">
-          <img 
-            src={logo} 
-            alt="Logo" 
-            width="10%"
-            height="auto"
-          />
-        </Box>
-        <LoggedinContext.Provider value={this.state}>
-          <Router>
-            <NavigationBar />
-              <Switch>
-                <Route path="/profile">
-                  {this.state.isLoggedIn ? <Watched /> : <Main />}
-                </Route>
-                <Route path="/login">
-                  {this.state.isLoggedIn ? <Redirect to="/" /> : <LoginComp toggleLoggedIn={this.state.toggleLoggedIn}/>}
-                </Route> 
-                <Route path="/signup">
-                  {this.state.isLoggedIn ? <Redirect to="/" /> : <SignupComp toggleLoggedIn={this.state.toggleLoggedIn}/>}
-                </Route>
-                <Route exact path="/" component={Main}/>
-                <Route path="/" component={Comp404} />
-              </Switch>
-          </Router>
-        </LoggedinContext.Provider>
-      </React.Fragment>
+      this.state.fetching ? (
+        <React.Fragment></React.Fragment>
+      ) : (
+        <React.Fragment>
+          <Box display="flex" flexDirection="row" justifyContent="Center">
+            <img 
+              src={logo} 
+              alt="Logo" 
+              width="10%"
+              height="auto"
+            />
+          </Box>
+          <LoggedinContext.Provider value={this.state}>
+            <Router>
+              <NavigationBar />
+                <Switch>
+                  <Route path="/profile">
+                    {this.state.isLoggedIn ? <Watched /> : <Main />}
+                  </Route>
+                  <Route path="/login">
+                    {this.state.isLoggedIn ? <Redirect to="/" /> : <LoginComp toggleLoggedIn={this.state.toggleLoggedIn}/>}
+                  </Route> 
+                  <Route path="/signup">
+                    {this.state.isLoggedIn ? <Redirect to="/" /> : <SignupComp toggleLoggedIn={this.state.toggleLoggedIn}/>}
+                  </Route>
+                  <Route exact path="/" component={Main}/>
+                  <Route path="/" component={Comp404} />
+                </Switch>
+            </Router>
+          </LoggedinContext.Provider>
+        </React.Fragment>
+      )
     )
   }
 }
@@ -129,7 +139,7 @@ const LoginComp = (props) => {
 
   const loginSubmitHandler = e => {
     e.preventDefault()
-    fetch(`${process.env.HOST}:8080/api/login`, {
+    fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/login`, {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
@@ -242,7 +252,7 @@ const SignupComp = (props) => {
       setError(true)
       setErrorMessage('Username is too long')
     } else {
-      fetch(`${process.env.HOST}:8080/api/register`, {
+      fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/register`, {
         method: 'POST',
         withCredentials: 'true',
         credentials: 'include',

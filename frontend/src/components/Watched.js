@@ -9,7 +9,7 @@ import {
 
 import {makeStyles} from '@material-ui/core/styles'
 
-require('dotenv').config()
+require('dotenv').config({path: '../../.env'})
 
 function Watched() {
 
@@ -18,7 +18,7 @@ function Watched() {
 
   const fetchSearch = async () => {
     if (fetching) {
-      const response = await fetch(`${process.env.HOST}:8080/api/getWatchedData`, {
+      const response = await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/getWatchedData`, {
         method: 'GET',
         withCredentials: 'true',
         credentials: 'include',
