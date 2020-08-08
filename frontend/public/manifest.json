@@ -1,0 +1,6 @@
+{
+  "short_name": "reel-site",
+  "name": "Reel Movie Site",
+  "start_url": ".",
+  "display": "standalone"
+}
