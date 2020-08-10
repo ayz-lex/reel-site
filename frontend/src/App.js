@@ -58,7 +58,7 @@ class App extends React.Component{
   }
 
   checkSession = () => {
-    fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/checkLogin`, {
+    fetch('http://3.129.97.74:8080/checkLogin', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -96,7 +96,7 @@ class App extends React.Component{
             />
           </Box>
           <LoggedinContext.Provider value={this.state}>
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
               <NavigationBar />
                 <Switch>
                   <Route path="/profile">
@@ -137,7 +137,7 @@ const LoginComp = (props) => {
 
   const loginSubmitHandler = e => {
     e.preventDefault()
-    fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/login`, {
+    fetch('http://3.129.97.74:8080/login', {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
@@ -250,7 +250,7 @@ const SignupComp = (props) => {
       setError(true)
       setErrorMessage('Username is too long')
     } else {
-      fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/register`, {
+      fetch('http://3.129.97.74:8080/register', {
         method: 'POST',
         withCredentials: 'true',
         credentials: 'include',

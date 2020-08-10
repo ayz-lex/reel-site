@@ -18,7 +18,7 @@ function Watched() {
 
   const fetchSearch = async () => {
     if (fetching) {
-      const response = await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/getWatchedData`, {
+      const response = await fetch('http://3.129.97.74:8080/getWatchedData', {
         method: 'GET',
         withCredentials: 'true',
         credentials: 'include',

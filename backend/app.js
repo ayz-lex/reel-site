@@ -14,15 +14,15 @@ app.use(cors({
 app.use(cookieParser())
 
 //api routes
-app.use('/api/watched', require('./api/watched'))
-app.use('/api/register', require('./api/auth/register'))
-app.use('/api/login', require('./api/auth/login'))
-app.use('/api/logout', require('./api/auth/logout'))
-app.use('/api/checkLogin', require('./api/auth/checkLogin'))
-app.use('/api/movie', require('./api/movie'))
-app.use('/api/recommendations', require('./api/recommendations'))
-app.use('/api/setWatched', require('./api/setWatched'))
-app.use('/api/getWatchedData', require('./api/getWatchedData'))
+app.use('/watched', require('./api/watched'))
+app.use('/register', require('./api/auth/register'))
+app.use('/login', require('./api/auth/login'))
+app.use('/logout', require('./api/auth/logout'))
+app.use('/checkLogin', require('./api/auth/checkLogin'))
+app.use('/movie', require('./api/movie'))
+app.use('/recommendations', require('./api/recommendations'))
+app.use('/setWatched', require('./api/setWatched'))
+app.use('/getWatchedData', require('./api/getWatchedData'))
 
 //port
 app.listen(PORT, () => {console.log(`currently listening to port ${PORT}`)})

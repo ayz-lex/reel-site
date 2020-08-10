@@ -4,7 +4,7 @@ const User = require('../../databases/models/users')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-require('dotenv').config({path: '../../.env'})
+require('dotenv').config()
 
 router.post('/', express.json(), async (req, res) => {
   let user = await User.findOne({where: {username: req.body.username}}).catch(err => {
@@ -45,7 +45,8 @@ router.post('/', express.json(), async (req, res) => {
     })
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false
+      secure: false,
+      sameSite: 'none',
     }).sendStatus(200)
 
   } else {

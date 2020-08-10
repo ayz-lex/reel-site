@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const fetch = require('node-fetch')
-require('dotenv').config({path: '../.env'})
+require('dotenv').config()
 
 router.get('/:page_number', async (req, res) => {
   let response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.API_KEY}&page=${req.params.page_number}`).catch(err => {

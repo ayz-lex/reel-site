@@ -1,13 +1,23 @@
-FROM node:12 as build
+FROM node:12 as builder
+
 WORKDIR /usr/src/app
-COPY package*.json ./
-COPY . .
+
+COPY package*.json /usr/src/app/
+
 RUN npm install
+
+COPY . /usr/src/app/
+
 RUN npm run build
 
-FROM nginx:1.16.0-alpine
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+FROM nginx:1.19.1-alpine
+
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+
 RUN rm /etc/nginx/conf.d/default.conf
+
 COPY nginx/nginx.conf /etc/nginx/conf.d
+
 EXPOSE 80
+
 CMD ["nginx", "-g", "daemon off;"]

@@ -105,7 +105,7 @@ const LogoutButton = (props) => {
 
   const logoutHandler = async e => {
     e.preventDefault()
-    await fetch(`http://${process.env.REACT_APP_BACKEND}:8080/api/logout`, {
+    await fetch(`http://3.129.97.74:8080/logout`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
