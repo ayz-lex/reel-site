@@ -105,7 +105,7 @@ const LogoutButton = (props) => {
 
   const logoutHandler = async e => {
     e.preventDefault()
-    await fetch(`http://3.129.97.74:8080/logout`, {
+    await fetch(`https://thereel.xyz/api/logout`, {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',

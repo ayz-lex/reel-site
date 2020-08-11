@@ -55,7 +55,7 @@ class Movie extends React.Component {
   }
 
   fetchMovie = async () => {
-    let response = await fetch(`http://3.129.97.74:8080/movie/${this.state.id}`, {
+    let response = await fetch(`https://thereel.xyz/api/movie/${this.state.id}`, {
       header: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'

@@ -18,7 +18,7 @@ function Watched() {
 
   const fetchSearch = async () => {
     if (fetching) {
-      const response = await fetch('http://3.129.97.74:8080/getWatchedData', {
+      const response = await fetch('https://thereel.xyz/api/getWatchedData', {
         method: 'GET',
         withCredentials: 'true',
         credentials: 'include',

@@ -58,7 +58,7 @@ class App extends React.Component{
   }
 
   checkSession = () => {
-    fetch('http://3.129.97.74:8080/checkLogin', {
+    fetch('https://thereel.xyz/api/checkLogin', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -137,7 +137,7 @@ const LoginComp = (props) => {
 
   const loginSubmitHandler = e => {
     e.preventDefault()
-    fetch('http://3.129.97.74:8080/login', {
+    fetch('https://thereel.xyz/api/login', {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
@@ -250,7 +250,7 @@ const SignupComp = (props) => {
       setError(true)
       setErrorMessage('Username is too long')
     } else {
-      fetch('http://3.129.97.74:8080/register', {
+      fetch('https://thereel.xyz/api/register', {
         method: 'POST',
         withCredentials: 'true',
         credentials: 'include',

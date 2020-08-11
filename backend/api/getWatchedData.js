@@ -4,6 +4,7 @@ const fetch = require('node-fetch')
 const User = require('../databases/models/users')
 const jwt = require('jsonwebtoken')
 const authChecker = require('../middleware/authChecker')
+require('dotenv').config()
 
 router.get('/', authChecker, async(req, res) => {
     const token = req.cookies.token
@@ -26,10 +27,10 @@ router.get('/', authChecker, async(req, res) => {
 
     const movieList = await Promise.all(watchedList.map(async movie => {
 
-      const response = await fetch(`http://localhost:8080/api/movie/${movie}`).catch(err => {
-          res.status(500).json({
-              error: 'Internal Error'
-          })
+      const response = await fetch(`https://api.themoviedb.org/3/movie/${movie}?api_key=${process.env.API_KEY}`).catch(err => {
+        res.status(500).json({
+          error: 'Internal Error'
+        })
       })
 
       const movieData = await response.json().catch(err => {

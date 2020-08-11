@@ -34,7 +34,7 @@ class Main extends React.Component {
     let page = this.state.page
 
     while (numMovies < 10) {
-      const response = await fetch(`http://3.129.97.74:8080/recommendations/${page}`, {
+      const response = await fetch(`https://thereel.xyz/api/recommendations/${page}`, {
         header: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -63,7 +63,7 @@ class Main extends React.Component {
   }
 
   loggedInFetch = async () => {
-    const response = await fetch('http://3.129.97.74:8080/watched', {
+    const response = await fetch('https://thereel.xyz/api/watched', {
       method: 'GET',
       withCredentials: 'true',
       credentials: 'include',
@@ -107,7 +107,7 @@ class Main extends React.Component {
   }
 
   addToWatched = async id => {
-    await fetch('http://3.129.97.74:8080/setWatched', {
+    await fetch('https://thereel.xyz/api/setWatched', {
       method: 'POST',
       withCredentials: 'true',
       credentials: 'include',
