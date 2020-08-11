@@ -31,6 +31,7 @@ There are several different pages that deal with authentication, and their acces
 * Node.js
 * Express.js - Node Framework
 * PostgreSQL (AWS RDS)
+* The Movie Database API (TMDB) - API for recommendations, ratings, poster paths, and other miscellaneous data.
 
 ### Frontend
 
